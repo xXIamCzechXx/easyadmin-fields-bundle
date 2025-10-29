@@ -2,7 +2,11 @@
 
 A **custom fields extension bundle** for [EasyAdmin](https://github.com/EasyCorp/EasyAdminBundle) — built for modern **Symfony 7.4+** and **PHP 8.4+**, fully compatible with the new **AssetMapper** pipeline.
 
+This is my first bundle, if I have done something wrong or incorrectly, please contact me and I will be happy to fix it.
 This bundle provides advanced and interactive form fields designed to improve the developer experience and user interface inside the EasyAdmin backend.
+
+A big thanks to a bundle from TCM-dev, BurningDog, evotodi, Yonn-Trimoreau for creating this awesome bundle –> https://github.com/TCM-dev/EasyAdminFieldsBundle/tree/main
+It works great with WebpackEncore and this bundle has been created inspired by this bundle.
 
 ---
 
