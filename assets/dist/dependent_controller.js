@@ -91,7 +91,6 @@ var controller_dependent = class extends Controller {
             options.forEach(option => {
                 const opt = new Option(option.text, option.value);
 
-                // 🧩 pokud stará hodnota odpovídá, označ ji jako selected
                 if (oldValue && String(option.value) === String(oldValue)) {
                     opt.selected = true;
                 }
@@ -99,7 +98,6 @@ var controller_dependent = class extends Controller {
                 input.options.add(opt);
             });
 
-            // 🧩 pokud původní hodnota nebyla nalezena, vynuluj
             const stillValid = Array.from(input.options).some(opt => opt.value === oldValue);
             if (!stillValid) {
                 input.value = "";
@@ -112,7 +110,6 @@ var controller_dependent = class extends Controller {
         const currentValue = oldValue || control.getValue();
         control.addOptions(options);
 
-        // 🧩 Pokud stará hodnota je mezi novými options, vyber ji
         if (currentValue && control.options[currentValue]) {
             control.setValue(currentValue);
         } else {
@@ -130,7 +127,6 @@ export const getValue = (input) => {
     }
 
     if (input.getAttribute('type') === 'checkbox') {
-        // chceme vrátit string hodnotu, ne boolean
         return input.checked ? "true" : "false";
     }
 
@@ -142,7 +138,6 @@ export const isTomSelect = (element) => {
 };
 
 export const getFieldFormGroup = (field) => {
-    // najdi odpovídající input
     const input = document.querySelector(`[name*="[${field}]"]`);
     if (!input) {
         return null;
@@ -152,13 +147,11 @@ export const getFieldFormGroup = (field) => {
 };
 
 export const getFieldFormGroups = (field) => {
-    // nejprve zkus najít form group přímo (např. pro kolekce)
     const formGroup = document.querySelector(`[data-prototype*="_${field}__"]`);
     if (formGroup) {
         return [formGroup];
     }
 
-    // najdi všechny odpovídající inputy
     const inputs = document.querySelectorAll(`[name*="[${field}]"]`);
     return Array.from(inputs).map(getInputClosestFormGroup);
 };
