@@ -1,0 +1,22 @@
+{
+    "name": "iamczech/easyadmin-fields-bundle",
+    "version": "1.0.0",
+    "description": "Extends basic EasyAdmin fields and works well with AssetMapper and Smyfony 7.4^",
+    "type": "symfony-bundle",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Iamczech\\EasyAdminFieldsBundle\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "xXIamCzechXx",
+            "email": "75167109+xXIamCzechXx@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}

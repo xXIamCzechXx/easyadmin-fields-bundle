@@ -1,0 +1,37 @@
+{
+    "name": "@iamczech/easyadmin-fields",
+    "license": "MIT",
+    "version": "1.0.0",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "config": {
+        "css_source": "assets/styles/style.css"
+    },
+    "symfony": {
+        "controllers": {
+            "dependent": {
+                "main": "dist/dependent_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            },
+            "locked": {
+                "main": "dist/locked_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}
