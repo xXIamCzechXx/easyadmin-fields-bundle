@@ -4,11 +4,12 @@ namespace Iamczech\EasyAdminFieldsBundle;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 
-final class EasyAdminFieldsBundle extends AbstractBundle
+final class EasyAdminFieldsBundle extends AbstractBundle implements PrependExtensionInterface
 {
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
@@ -27,6 +28,12 @@ final class EasyAdminFieldsBundle extends AbstractBundle
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;
+        }
+
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (isset($bundles['TwigBundle'])) {
+            $container->prependExtensionConfig('twig', ['form_themes' => ['@EasyAdminFields/embed.html.twig']]);
         }
 
         $container->prependExtensionConfig('framework', [
@@ -56,5 +63,14 @@ final class EasyAdminFieldsBundle extends AbstractBundle
     public function getPath(): string
     {
         return \dirname(__DIR__);
+    }
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (isset($bundles['TwigBundle'])) {
+            $container->prependExtensionConfig('twig', ['form_themes' => ['@EasyAdminFields/embed.html.twig']]);
+        }
     }
 }

@@ -1,0 +1,163 @@
+{# {% extends '@EasyAdmin/layout.html.twig' %} #}
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{% set ea = ea() %}
+{% trans_default_domain ea.i18n.translationDomain %}
+
+<!DOCTYPE html>
+<html lang="{{ ea.i18n.htmlLocale }}" dir="{{ ea.i18n.textDirection }}" data-turbo="false" style="height: auto;">
+<head>
+    {% block head_metas %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate, nocache" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta name="generator" content="EasyAdmin" />
+    {% endblock head_metas %}
+
+    {% set page_title_block_output %}{% block page_title %}{{ block('content_title') }}{% endblock %}{% endset %}
+    <title>{{ page_title_block_output|striptags|raw }}</title>
+
+    {% block head_stylesheets %}
+        <link rel="stylesheet" href="{{ asset('app.css', ea.assets.defaultAssetPackageName) }}">
+    {% endblock %}
+
+    {% block configured_stylesheets %}
+        {{ include('@EasyAdmin/includes/_css_assets.html.twig', { assets: ea.assets.cssAssets ?? [] }, with_context = false) }}
+        {{ include('@EasyAdmin/includes/_encore_link_tags.html.twig', { assets: ea.assets.webpackEncoreAssets ?? [] }, with_context = false) }}
+    {% endblock %}
+
+    {% block head_favicon %}
+        <link rel="shortcut icon" href="{{ asset(ea.dashboardFaviconPath) }}">
+    {% endblock %}
+
+    {% block head_javascript %}
+        <script src="{{ asset('app.js', ea.assets.defaultAssetPackageName) }}"></script>
+
+        {% block importmap %}
+            {{ include('@EasyAdmin/includes/_importmap.html.twig', { assets: ea.assets.assetMapperAssets ?? [] }, with_context = false) }}
+        {% endblock %}
+
+        {% set passthrough_params = app.request.query.all|filter((v, k) => k in ['embed', 'municipalityId']) %} {# TODO::Modify me when adding new embed parameter #}
+        {% if passthrough_params|length > 0 %}
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const passthrough = {{ passthrough_params|json_encode|raw }};
+
+                const addParams = (url) => {
+                    try {
+                        const u = new URL(url, window.location.origin);
+                        Object.entries(passthrough).forEach(([key, value]) => {
+                            if (!u.searchParams.has(key)) {
+                                u.searchParams.set(key, value);
+                            }
+                        });
+                        return u.toString();
+                    } catch (e) {
+                        return url;
+                    }
+                };
+
+                // Links (action buttons, pagination, menu items, atd.)
+                document.querySelectorAll('a[href]').forEach(a => {
+                    const href = a.getAttribute('href');
+                    if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+                    a.href = addParams(href);
+                });
+            });
+        </script>
+        {% endif %}
+
+    {% endblock head_javascript %}
+
+    {% block configured_javascripts %}
+        {{ include('@EasyAdmin/includes/_js_assets.html.twig', { assets: ea.assets.jsAssets ?? [] }, with_context = false) }}
+        {{ include('@EasyAdmin/includes/_encore_script_tags.html.twig', { assets: ea.assets.webpackEncoreAssets ?? [] }, with_context = false) }}
+    {% endblock %}
+
+    {% block configured_head_contents %}
+        {% for htmlContent in ea.assets.headContents ?? [] %}
+            {{ htmlContent|raw }}
+        {% endfor %}
+    {% endblock %}
+</head>
+
+{% block body %}
+    <body {% block body_attr %}data-controller="admin"{% endblock %}
+          id="{% block body_id %}{% endblock %}"
+          class="ea embed {% block body_class %}{% endblock %}"
+          style="height: auto;"
+          data-ea-content-width="{{ ea.crud.contentWidth ?? ea.dashboardContentWidth ?? 'normal' }}"
+          data-ea-sidebar-width="{{ ea.crud.sidebarWidth ?? ea.dashboardSidebarWidth ?? 'normal' }}"
+          data-ea-dark-scheme-is-enabled="{{ ea.dashboardHasDarkModeEnabled ? 'true' : 'false' }}"
+          data-ea-default-color-scheme="{{ ea.dashboardDefaultColorScheme }}"
+          data-ea-icon-set="{{ ea.assets.iconSet }}"
+          data-ea-icon-prefix="{{ ea.assets.defaultIconPrefix }}">
+
+    {% block javascript_page_layout %}
+        <script src="{{ asset('page-layout.js', ea.assets.defaultAssetPackageName) }}"></script>
+    {% endblock javascript_page_layout %}
+    {% block javascript_page_color_scheme %}
+        <script src="{{ asset('page-color-scheme.js', ea.assets.defaultAssetPackageName) }}"></script>
+    {% endblock javascript_page_color_scheme %}
+
+    {% block wrapper %}
+        <div class="wrapper p-0 w-100"  style="all: unset;" >
+            {% block main_content_wrapper %}
+                <section class="main-content">
+                    <div class="content-wrapper p-0">
+                        {% block content %}
+                            <article class="content p-3 border rounded embed-content w-100">
+                                {% block content_header_wrapper %}
+                                    {% set has_help_message = (ea.crud.helpMessage ?? '') is not empty %}
+                                    <section class="content-header" style="padding: 20px;">
+                                        {% block content_header %}
+                                            <div class="content-header-title">
+                                                <h1 class="title">
+                                                    {% block content_title %}{% endblock %}
+                                                    {% block content_help %}
+                                                        {% if has_help_message %}
+                                                            <a tabindex="0" class="content-header-help" data-bs-toggle="popover" data-bs-custom-class="ea-content-help-popover" data-bs-animation="true" data-bs-html="true" data-bs-placement="bottom" data-bs-trigger="focus" data-bs-content="{{ ea.crud.helpMessage|trans|e('html') }}">
+                                                                <twig:ea:Icon name="internal:circle-info" />
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endblock %}
+                                                </h1>
+                                            </div>
+
+                                            {% block page_actions_wrapper %}
+                                                <div class="page-actions">{% block page_actions %}{% endblock %}</div>
+                                            {% endblock %}
+                                        {% endblock content_header %}
+                                    </section>
+                                {% endblock content_header_wrapper %}
+
+                                <section id="main" class="content-body">
+                                    {% block main %}{% endblock %}
+                                </section>
+
+                                {% block content_footer_wrapper %}
+                                    {% if block('content_footer') is not empty %}
+                                        <section class="content-footer">
+                                            {% block content_footer %}{% endblock %}
+                                        </section>
+                                    {% endif %}
+                                {% endblock %}
+                            </article>
+                        {% endblock content %}
+
+                        <div id="content-resizer-handler" class="resizer-handler resizer-handler-right"></div>
+                    </div>
+                </section>
+            {% endblock main_content_wrapper %}
+        </div>
+        <div class="modal fade ea-popup-modal" data-admin-target="modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content" data-admin-target="content">
+                    {# Here is modal data rendered #}
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    </body>
+{% endblock body %}
+</html>

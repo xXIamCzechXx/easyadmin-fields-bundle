@@ -1,0 +1,21 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+
+{# this template is used to display users table in related crud controllers #}
+{% block embed_widget %}
+    {% set id = ea.entity.instance.id ?? null %}
+    {% if id %}
+        <div class="ea-field-user-list">
+            <iframe
+                src="{{ form.vars.ea_vars.field.customOptions.get('callbackUrl') }}"
+                width="100%"
+                height="{{ form.vars.ea_vars.field.customOptions.get('height') }}"
+                data-controller="iamczech--easyadmin-fields-bundle--embed"
+                data-action="load->iamczech--easyadmin-fields-bundle--embed#resizeIframe"
+            ></iframe>
+        </div>
+    {% else %}
+        <p class="text-muted">Uživatelé budou dostupní po vytvoření klienta.</p>
+    {% endif %}
+{% endblock %}

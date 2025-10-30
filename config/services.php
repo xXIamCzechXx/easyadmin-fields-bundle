@@ -3,6 +3,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Asset\AssetPackage;
+use Iamczech\EasyAdminFieldsBundle\Service\EmbedConfigurator;
 
 return static function (ContainerConfigurator $container)
 {
@@ -10,5 +11,9 @@ return static function (ContainerConfigurator $container)
 
     ->set(AssetPackage::class)
         ->arg(0, service('request_stack'))
-        ->tag('assets.package', ['package' => AssetPackage::PACKAGE_NAME]);
+        ->tag('assets.package', ['package' => AssetPackage::PACKAGE_NAME])
+
+    ->set(EmbedConfigurator::class)
+        ->autowire()
+        ->autoconfigure();
 };

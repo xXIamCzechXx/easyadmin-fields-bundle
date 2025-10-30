@@ -22,6 +22,12 @@
                 "webpackMode": "lazy",
                 "fetch": "lazy",
                 "enabled": true
+            },
+            "embed": {
+                "main": "dist/embed_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
             }
         },
         "importmap": {
