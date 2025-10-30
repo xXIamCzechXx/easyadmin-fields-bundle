@@ -8,6 +8,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
+ */
 class EmbedField implements FieldInterface
 {
     use FieldTrait;

@@ -2,7 +2,7 @@
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 
-{# this template is used to display users table in related crud controllers #}
+{# @author Ing. Dominik Mach <xXIamCzechXx@gmail.com> #}
 {% set id = ea.entity.instance.id ?? null %}
 {% if id %}
     <div class="ea-field-user-list">
@@ -11,7 +11,7 @@
             width="100%"
             height="{{ field.customOptions.get('height') }}"
             data-controller="iamczech--easyadmin-fields-bundle--embed"
-            data-action="load->iamczech--easyadmin-fields-bundle--embed#resizeIframe"
+            data-action="load->iamczech--easyadmin-fields-bundle--embed#resize"
         ></iframe>
     </div>
 {% else %}

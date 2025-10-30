@@ -9,6 +9,9 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 
+/**
+ * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
+ */
 final class EasyAdminFieldsBundle extends AbstractBundle implements PrependExtensionInterface
 {
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void

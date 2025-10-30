@@ -5,8 +5,12 @@ namespace Iamczech\EasyAdminFieldsBundle\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use Iamczech\EasyAdminFieldsBundle\Form\Type\CrudDependentType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
+ */
 final class DependentField
 {
     public static function adapt(FieldInterface $field, array $options): FieldInterface
@@ -27,6 +31,8 @@ final class DependentField
             ));
         }
 
+        $field->setFormType(CrudDependentType::class);
+
         return $field
             ->setFormTypeOptions([
                 'row_attr' => [
@@ -36,12 +42,16 @@ final class DependentField
             ]);
     }
 
-    public static function encodeOptions(array $options)
+    public static function encodeOptions(array $options): false|string
     {
-        return json_encode($options, JSON_THROW_ON_ERROR);
+        try {
+            return json_encode($options, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return '';
+        }
     }
 
-    public static function configureOptions(OptionsResolver $resolver)
+    public static function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'fetch_on_init' => false,

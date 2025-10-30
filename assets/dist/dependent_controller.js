@@ -1,6 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 
+/**
+ * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
+ */
 var controller_dependent = class extends Controller {
+
     connect() {
         const options = getOptions(this.element);
         this.callbackUrl = options.callback_url;
@@ -9,36 +13,27 @@ var controller_dependent = class extends Controller {
 
         this.dependencies.forEach(dependency => {
             const formGroup = getFieldFormGroup(dependency);
-            if (!formGroup) return;
+            if (!formGroup) {
+                return;
+            }
 
             formGroup.addEventListener('input', this.handle.bind(this));
             this.dependenciesFormGroup.push(formGroup);
         });
 
         this.input = getFormGroupField(this.element);
-        this.isTomselect = Boolean(this.element.querySelector('.tomselected'));
 
         if (options.fetch_on_init) {
-            this.handle();
+            this.handle().then(r => console.log('initialize dependent field'));
         }
     }
 
-    disconnect() {
-        this.dependenciesFormGroup.forEach(formGroup => {
-            formGroup.removeEventListener('input', this.handle.bind(this));
-        });
-    }
-
     async handle() {
-        const input = this.input;
-
-        const oldValue = input.value
-        const hasEmptyOption = Array.from(input.options).some(option => option.value === "");
-
-        this.clearOptions();
-
+        const hasEmptyOption = Array.from(this.input.options).some(option => option.value === "");
+        const oldValue = this.input.value;
         const newOptions = await this.fetchOptions();
 
+        this.clearOptions();
         this.setOptions(newOptions, hasEmptyOption, oldValue);
     }
 
@@ -47,7 +42,9 @@ var controller_dependent = class extends Controller {
 
         this.dependencies.forEach(dependency => {
             const formGroup = getFieldFormGroup(dependency);
-            if (!formGroup) return;
+            if (!formGroup) {
+                return;
+            }
 
             const field = getFormGroupField(formGroup);
             const value = getValue(field);
@@ -63,13 +60,14 @@ var controller_dependent = class extends Controller {
 
         const queryParams = new URLSearchParams(params).toString();
         const response = await fetch(`${this.callbackUrl}?${queryParams}`);
+
         return await response.json();
     }
 
     clearOptions() {
         if (!isTomSelect(this.input)) {
             while (this.input.options.length > 0) {
-                this.input.remove(0);
+                this.input.remove();
             }
             return;
         }
@@ -80,7 +78,7 @@ var controller_dependent = class extends Controller {
         control.clearOptions();
     }
 
-    setOptions(options, hasEmptyOption, oldValue = null) {
+    setOptions(options, hasEmptyOption, previousOption = null) {
         const input = this.input;
 
         if (!isTomSelect(input)) {
@@ -91,28 +89,20 @@ var controller_dependent = class extends Controller {
             options.forEach(option => {
                 const opt = new Option(option.text, option.value);
 
-                // 🧩 pokud stará hodnota odpovídá, označ ji jako selected
-                if (oldValue && String(option.value) === String(oldValue)) {
+                if (previousOption && String(option.value) === String(previousOption)) {
                     opt.selected = true;
                 }
 
                 input.options.add(opt);
             });
 
-            // 🧩 pokud původní hodnota nebyla nalezena, vynuluj
-            const stillValid = Array.from(input.options).some(opt => opt.value === oldValue);
-            if (!stillValid) {
-                input.value = "";
-            }
-
             return;
         }
 
         const control = input.tomselect;
-        const currentValue = oldValue || control.getValue();
+        const currentValue = previousOption || control.getValue();
         control.addOptions(options);
 
-        // 🧩 Pokud stará hodnota je mezi novými options, vyber ji
         if (currentValue && control.options[currentValue]) {
             control.setValue(currentValue);
         } else {
@@ -122,6 +112,12 @@ var controller_dependent = class extends Controller {
         control.refreshOptions(false);
         control.unlock();
     }
+
+    disconnect() {
+        this.dependenciesFormGroup.forEach(formGroup => {
+            formGroup.removeEventListener('input', this.handle.bind(this));
+        });
+    }
 }
 
 export const getValue = (input) => {
@@ -130,7 +126,6 @@ export const getValue = (input) => {
     }
 
     if (input.getAttribute('type') === 'checkbox') {
-        // chceme vrátit string hodnotu, ne boolean
         return input.checked ? "true" : "false";
     }
 
@@ -142,7 +137,6 @@ export const isTomSelect = (element) => {
 };
 
 export const getFieldFormGroup = (field) => {
-    // najdi odpovídající input
     const input = document.querySelector(`[name*="[${field}]"]`);
     if (!input) {
         return null;
@@ -152,13 +146,11 @@ export const getFieldFormGroup = (field) => {
 };
 
 export const getFieldFormGroups = (field) => {
-    // nejprve zkus najít form group přímo (např. pro kolekce)
     const formGroup = document.querySelector(`[data-prototype*="_${field}__"]`);
     if (formGroup) {
         return [formGroup];
     }
 
-    // najdi všechny odpovídající inputy
     const inputs = document.querySelectorAll(`[name*="[${field}]"]`);
     return Array.from(inputs).map(getInputClosestFormGroup);
 };
@@ -169,6 +161,24 @@ export const getFormGroupField = (formGroup) => {
 
 export const getFormGroupFields = (formGroup) => {
     return formGroup.querySelectorAll('select, input, textarea');
+};
+
+export const getInputClosestFormGroup = (input) => {
+    return input.closest('.js-form-group-override') || input.closest('.form-group');
+};
+
+export const getOptions = (input) => {
+    const data = input.getAttribute('data-dependent-field-options');
+
+    if (!data) {
+        return {
+            callback_url: "",
+            dependencies: [],
+            fetch_on_init: false
+        };
+    }
+
+    return JSON.parse(data);
 };
 
 export const hideField = (field) => {
@@ -197,28 +207,6 @@ export const showField = (field) => {
             }
         });
     });
-};
-
-export const getInputClosestFormGroup = (input) => {
-    return input.closest('.js-form-group-override') || input.closest('.form-group');
-};
-
-export const getOptions = (input) => {
-    const data = input.getAttribute('data-dependent-field-options');
-
-    if (!data) {
-        return {
-            callback_url: "",
-            dependencies: [],
-            fetch_on_init: false
-        };
-    }
-
-    return JSON.parse(data);
-};
-
-export const getCallbackUrl = (input) => {
-    return input.getAttribute('data-dependent-field-callback-url');
 };
 
 export {

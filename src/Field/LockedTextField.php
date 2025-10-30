@@ -6,6 +6,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
+ */
 class LockedTextField implements FieldInterface
 {
     use FieldTrait;
@@ -21,8 +24,10 @@ class LockedTextField implements FieldInterface
             ->setFormType(TextType::class)
             ->setFormTypeOptions([
                 'attr.data-controller' => 'iamczech--easyadmin-fields-bundle--locked',
+                'attr.data-action' => 'click->iamczech--easyadmin-fields-bundle--locked#unlock',
                 'attr.data-unlock-group' => 'default',
                 'attr.locked' => true,
+                'attr.readonly' => 'readonly',
                 'attr.data-confirm-text' => 'Povolit editaci titulů, jména a příjmení.#newline#Editaci titulů, jména a příjmení provádějte pouze v případě, že jde stále o tutéž osobu, tedy když opravujete překlepy, doplňujete tituly, žena se vdala a má nové příjmení. Pokud jde o jinou osobu, ale se stejným e-mailem (např. starosta@hornidolni.cz), použijte tlačíko "Stejný email, nový uživatel".',
             ])
             ->addCssClass('field-text')

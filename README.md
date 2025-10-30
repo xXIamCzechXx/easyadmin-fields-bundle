@@ -72,6 +72,7 @@ The bundle automatically registers its Stimulus controllers in your `controllers
 
 A **reactive EasyAdmin field** that allows one field to depend on another —
 for example, dynamically updating a `<select>` field’s options based on a previous input.
+Important thing, DependentField and its Associated fields cannot be ->autocomplete() (dependencies can), it has its own EventSubscriber to prevent from fetching large amount of data.
 
 **Usage:**
 
@@ -129,6 +130,7 @@ The controller automatically handles:
 ### 🧹 **EmbedField**
 Embed nested `CrudController` directly into forms (inline CRUD editing).
 It is important to set callback url for a iframe via setCallbackUrl() and generate it via adminUrlGenerator.
+The default page is Crud::PAGE_INDEX action, but you can change it via the setAction() method.
 
 **Usage:**
 
@@ -171,12 +173,10 @@ Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
 ### ✅ Current Features
 
 * **DependentField**: dynamic dependency management between fields
+* **EmbedField**: rendering crud controllers within another crud controller
 * **LockedTextField**: controlled unlocking of grouped inputs via confirmation
 
 ### 🧠 Upcoming Features
-
-* 🔧 **DependentField Optimization**
-  Improved support for `autocomplete()` inputs — including `AssociationField` and `ChoiceField` dependencies for large datasets.
 
 * 💬 **LockedTextField Popup Redesign**
   Replace `window.confirm()` with a custom popup for a better UX and consistent styling inside EasyAdmin.
