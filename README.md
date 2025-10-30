@@ -53,6 +53,12 @@ The bundle automatically registers its Stimulus controllers in your `controllers
             "webpackMode": "lazy",
             "fetch": "lazy",
             "enabled": true
+        },
+        "embed": {
+            "main": "dist/embed_controller.js",
+            "webpackMode": "lazy",
+            "fetch": "lazy",
+            "enabled": true
         }
     }
 }
@@ -120,6 +126,31 @@ The controller automatically handles:
 
 ---
 
+### 🧹 **EmbedField**
+Embed nested `CrudController` directly into forms (inline CRUD editing).
+It is important to set callback url for a iframe via setCallbackUrl() and generate it via adminUrlGenerator.
+
+**Usage:**
+
+```php
+yield EmbedField::new('entities')
+    ->setCallbackUrl($this->adminUrlGenerator
+        ->setController(EntityCrudController::class)
+```
+
+NOTE: To render only content of EA you need to override default layout by overriding configureCrud method in your CrudController or AbstractCrudController if you have one.
+
+```php
+public function configureCrud(Crud $crud): Crud
+{
+    $crud = parent::configureCrud($crud);
+
+    EmbedConfigurator::applyEmbedLayout($crud, $this->container->get('request_stack'));
+
+    return $crud;
+}
+```
+
 ## ⚙️ Stimulus Controllers
 
 The bundle provides two native controllers:
@@ -128,6 +159,7 @@ The bundle provides two native controllers:
 | ----------- | ------------------------------------------------------- |
 | `dependent` | Handles asynchronous loading of dependent field options |
 | `locked`    | Manages field unlocking with confirmation alerts        |
+| `embed`     | Resize iframe to its content height                     |
 
 If you're using AssetMapper, they’re automatically registered.
 Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
@@ -148,9 +180,6 @@ Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
 
 * 💬 **LockedTextField Popup Redesign**
   Replace `window.confirm()` with a custom popup for a better UX and consistent styling inside EasyAdmin.
-
-* 🧹 **EmbedField**
-  Embed nested `CrudController` directly into forms (inline CRUD editing).
 
 * 🌲 **TreeField**
   Visual tree hierarchy for `Gedmo\Tree` entities on the index page (collapsible nodes + drag & drop planned).
