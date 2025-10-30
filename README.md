@@ -159,6 +159,7 @@ The bundle provides two native controllers:
 | ----------- | ------------------------------------------------------- |
 | `dependent` | Handles asynchronous loading of dependent field options |
 | `locked`    | Manages field unlocking with confirmation alerts        |
+| `embed`     | Resize iframe to its content height                     |
 
 If you're using AssetMapper, they’re automatically registered.
 Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
