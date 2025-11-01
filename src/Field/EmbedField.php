@@ -17,6 +17,7 @@ class EmbedField implements FieldInterface
 
     public const OPTION_CALLBACK_URL = 'callbackUrl';
     public const OPTION_DEFAULT_HEIGHT = 'height';
+    public const OPTION_DEFAULT_CONTROLLER = 'controller';
 
     public static function new(string $propertyName, ?string $label = null): self
     {
@@ -37,6 +38,7 @@ class EmbedField implements FieldInterface
             ->hideOnIndex()
             ->setCustomOption(self::OPTION_DEFAULT_HEIGHT, '400px')
             ->setCustomOption(self::OPTION_CALLBACK_URL, null)
+            ->setCustomOption(self::OPTION_DEFAULT_CONTROLLER, 'iamczech--easyadmin-fields-bundle--embed')
             ->addCssClass('embedded-form');
     }
 
@@ -48,5 +50,10 @@ class EmbedField implements FieldInterface
     public function setHeight(string $height): self
     {
         return $this->setCustomOption(self::OPTION_DEFAULT_HEIGHT, $height);
+    }
+
+    public function setController(string $controller): self
+    {
+        return $this->setCustomOption(self::OPTION_DEFAULT_CONTROLLER, $controller);
     }
 }

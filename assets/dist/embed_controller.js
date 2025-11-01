@@ -6,31 +6,40 @@ import { Controller } from "@hotwired/stimulus";
 var controller_embed = class extends Controller {
 
     /**
-     * Resize iframes when is loaded and also when height of its content changes
-     * @param {Event} e
+     * Resize iframes when is loaded and also when the height of its content changes
      */
-    resize(e) {
-        const iframe = e.currentTarget;
+    connect() {
         const buffer = 200;
         try {
-            let target = iframe.contentWindow.document.getElementById('main') || iframe.contentWindow.document.body;
-            const updateHeight = () => {
-                iframe.style.height = `${target.scrollHeight + buffer}px`;
-            }
+            const handle = () => {
+                let target = this.element.contentWindow.document.getElementById('main') || this.element.contentWindow.document.body;
+                const updateHeight = () => {
+                    this.element.style.height = `${target.scrollHeight + buffer}px`;
+                }
 
-            iframe._resizeObserver = new iframe.contentWindow.ResizeObserver(updateHeight);
-            iframe._resizeObserver.observe(target); // react to a height changes in iframe
-            iframe._mutationObserver = new iframe.contentWindow.MutationObserver(updateHeight);
-            iframe._mutationObserver.observe(target, {
-                childList: true,
-                subtree: true,
-                attributes: true
-            }); // reacts to a changes in DOM (přidání/odebrání prvků)
+                this.element._resizeObserver = new this.element.contentWindow.ResizeObserver(updateHeight);
+                this.element._resizeObserver.observe(target); // react to the height changes in an iframe
+                this.element._mutationObserver = new this.element.contentWindow.MutationObserver(updateHeight);
+                this.element._mutationObserver.observe(target, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true
+                }); // reacts to changes in DOM
 
-            iframe.addEventListener('load', () => this.resize(iframe)); // resize after each reload or change of a content
+            };
+            this.element.addEventListener('load', () => handle(this.element)); // resize after each reload or change of a content
 
         } catch (e) {
             console.warn('resize: unable to read content of an iframe (other domain?)', e);
+        }
+    }
+
+    disconnect() {
+        if (this.element._resizeObserver) {
+            this.element._resizeObserver.disconnect();
+        }
+        if (this.element._mutationObserver) {
+            this.element._mutationObserver.disconnect();
         }
     }
 }

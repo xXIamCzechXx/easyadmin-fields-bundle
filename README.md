@@ -114,9 +114,14 @@ use App\Field\LockedTextField;
 
 yield LockedTextField::new('firstName', 'First Name')
     ->setUnlockGroup('name')
-    ->setConfirmText('Do you really want to unlock this group of fields?')
-    ->setColumns('col-lg-3 col-md-4 col-sm-12')
-    ->hideOnIndex();
+    ->setContentText('Do you really want to unlock this group of fields via first name?')
+    ->setConfirmText('Oh yes!')
+    ->setCancelText('Oh no!');
+yield LockedTextField::new('lastName', 'Last Name')
+    ->setUnlockGroup('name')
+    ->setContentText('Do you really want to unlock this group of fields via last name?')
+    ->setConfirmText('I agree!')
+    ->setCancelText('No, thanks!');
 ```
 
 The controller automatically handles:
@@ -173,13 +178,10 @@ Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
 ### ✅ Current Features
 
 * **DependentField**: dynamic dependency management between fields
-* **EmbedField**: rendering crud controllers within another crud controller
+* **EmbedField**: rendering crud controllers within another crud controller with a custom popup for a better UX and consistent styling inside EasyAdmin.
 * **LockedTextField**: controlled unlocking of grouped inputs via confirmation
 
 ### 🧠 Upcoming Features
-
-* 💬 **LockedTextField Popup Redesign**
-  Replace `window.confirm()` with a custom popup for a better UX and consistent styling inside EasyAdmin.
 
 * 🌲 **TreeField**
   Visual tree hierarchy for `Gedmo\Tree` entities on the index page (collapsible nodes + drag & drop planned).
@@ -224,13 +226,13 @@ Copyright © [iamczech](https://github.com/iamczech)
 
 ## 🦯 Summary
 
-| Feature                   | Description                                                    |
-| ------------------------- | -------------------------------------------------------------- |
-| **Symfony Compatibility** | Symfony 7.4 and newer                                          |
-| **PHP Version**           | PHP 8.4+                                                       |
-| **Asset Pipeline**        | Fully compatible with AssetMapper                              |
-| **Provided Fields**       | `DependentField`, `LockedTextField`                            |
-| **Upcoming**              | `EmbedField`, `TreeField`, enhanced Autocomplete, custom popup |
+| Feature                   | Description                                       |
+| ------------------------- |---------------------------------------------------|
+| **Symfony Compatibility** | Symfony 7.4 and newer                             |
+| **PHP Version**           | PHP 8.4+                                          |
+| **Asset Pipeline**        | Fully compatible with AssetMapper                 |
+| **Provided Fields**       | `DependentField`, `LockedTextField`, `EmbedField` |
+| **Upcoming**              | `TreeField`, enhanced Autocomplete                |
 
 ---
 

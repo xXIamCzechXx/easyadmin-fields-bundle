@@ -13,7 +13,10 @@ class LockedTextField implements FieldInterface
 {
     use FieldTrait;
 
-    public const OPTION_GROUP_NAME = 'groupName';
+    public const OPTION_UNLOCK_GROUP = 'attr.data-group';
+    public const OPTION_CONTENT_TEXT = 'attr.data-text';
+    public const OPTION_CONFIRM_TEXT = 'attr.data-confirm';
+    public const OPTION_CANCEL_TEXT = 'attr.data-cancel';
 
     public static function new(string $propertyName, ?string $label = null): self
     {
@@ -25,19 +28,40 @@ class LockedTextField implements FieldInterface
             ->setFormTypeOptions([
                 'attr.data-controller' => 'iamczech--easyadmin-fields-bundle--locked',
                 'attr.data-action' => 'click->iamczech--easyadmin-fields-bundle--locked#unlock',
-                'attr.data-unlock-group' => 'default',
-                'attr.locked' => true,
                 'attr.readonly' => 'readonly',
-                'attr.data-confirm-text' => 'Povolit editaci titulů, jména a příjmení.#newline#Editaci titulů, jména a příjmení provádějte pouze v případě, že jde stále o tutéž osobu, tedy když opravujete překlepy, doplňujete tituly, žena se vdala a má nové příjmení. Pokud jde o jinou osobu, ale se stejným e-mailem (např. starosta@hornidolni.cz), použijte tlačíko "Stejný email, nový uživatel".',
             ])
+            ->setFormTypeOption(self::OPTION_UNLOCK_GROUP, 'default')
+            ->setFormTypeOption(self::OPTION_CONTENT_TEXT, 'Accept changes of locked fields?')
+            ->setFormTypeOption(self::OPTION_CONFIRM_TEXT, 'Confirm')
+            ->setFormTypeOption(self::OPTION_CANCEL_TEXT, 'Cancel')
             ->addCssClass('field-text')
-            ->setDefaultColumns('col-md-6 col-xxl-5')
-            ->setCustomOption(self::OPTION_GROUP_NAME, 'default');
+            ->setDefaultColumns('col-md-6 col-xxl-5');
     }
 
     public function setUnlockGroup(?string $group): self
     {
-        $this->setFormTypeOption('attr.data-unlock-group', $group);
+        $this->setFormTypeOption(self::OPTION_UNLOCK_GROUP, $group);
+
+        return $this;
+    }
+
+    public function setContentText(?string $text): self
+    {
+        $this->setFormTypeOption(self::OPTION_CONTENT_TEXT, $text);
+
+        return $this;
+    }
+
+    public function setConfirmText(?string $text): self
+    {
+        $this->setFormTypeOption(self::OPTION_CONFIRM_TEXT, $text);
+
+        return $this;
+    }
+
+    public function setCancelText(?string $text): self
+    {
+        $this->setFormTypeOption(self::OPTION_CANCEL_TEXT, $text);
 
         return $this;
     }
