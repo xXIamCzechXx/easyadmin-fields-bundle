@@ -158,15 +158,58 @@ public function configureCrud(Crud $crud): Crud
 }
 ```
 
+### 🧹 **TreeConfigurator**
+You must use `NestedSetEntity` and implement `TreeInterface` directly into your entity where you want to show tree hierarchy.
+It is highly recommended to use `Gedmo\Tree` annotation with Strategy::NESTED.
+
+**Usage:**
+
+```php
+use Gedmo\Tree\Traits\NestedSetEntity;
+use Iamczech\EasyAdminFieldsBundle\Interface\TreeInterface;
+
+#[Gedmo\Tree(type: Strategy::NESTED)]
+#[ORM\Entity(repositoryClass: NestedTreeRepository::class)]
+class Category implements TreeInterface
+{
+    use NestedSetEntity;
+    
+```
+
+NOTE: Create your own TreeController and extend AbstractTreeController, then you can override reorder() method if necessary.
+
+```php
+use Iamczech\EasyAdminFieldsBundle\Controller\AbstractTreeController;
+
+class TreeController extends AbstractTreeController
+{
+    // Do something or override reorder() method
+}
+```
+
+Last you need to extend your crud controller and appy TreeConfigurator.
+
+```php
+public function configureCrud(Crud $crud): Crud
+{
+    $crud = parent::configureCrud($crud);
+
+    TreeConfigurator::applyTreeLayout($crud);
+
+    return $crud;
+}
+```
+
 ## ⚙️ Stimulus Controllers
 
-The bundle provides two native controllers:
+The bundle provides four native controllers:
 
 | Controller  | Description                                             |
-| ----------- | ------------------------------------------------------- |
+|-------------|---------------------------------------------------------|
 | `dependent` | Handles asynchronous loading of dependent field options |
 | `locked`    | Manages field unlocking with confirmation alerts        |
 | `embed`     | Resize iframe to its content height                     |
+| `tree`      | Generates wonderful tree hierarchy with drag 'n drop    |
 
 If you're using AssetMapper, they’re automatically registered.
 Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
@@ -180,6 +223,7 @@ Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
 * **DependentField**: dynamic dependency management between fields
 * **EmbedField**: rendering crud controllers within another crud controller with a custom popup for a better UX and consistent styling inside EasyAdmin.
 * **LockedTextField**: controlled unlocking of grouped inputs via confirmation
+* **TreeConfigurator**: controlled unlocking of grouped inputs via confirmation
 
 ### 🧠 Upcoming Features
 
