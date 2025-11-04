@@ -22,5 +22,17 @@
         "php": ">=8.4",
         "symfony/framework-bundle": "^7.4",
         "easycorp/easyadmin-bundle": "^4.0"
+    },
+    "suggest": {
+        "npm-asset/sortablejs": "JavaScript library for drag-and-drop functionality. Install via `npm install sortablejs`."
+    },
+    "extra": {
+        "symfony": {
+            "asset-mapper": {
+                "paths": {
+                    "assets/vendor/sortablejs": "@sortablejs"
+                }
+            }
+        }
     }
 }

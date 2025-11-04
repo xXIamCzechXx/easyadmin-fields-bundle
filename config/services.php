@@ -3,8 +3,11 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Asset\AssetPackage;
+use Iamczech\EasyAdminFieldsBundle\Controller\TreeController;
 use Iamczech\EasyAdminFieldsBundle\Form\EventListener\DependentAutocompleteSubscriber;
+use Iamczech\EasyAdminFieldsBundle\Routing\BundleRoutesLoader;
 use Iamczech\EasyAdminFieldsBundle\Service\EmbedConfigurator;
+use Iamczech\EasyAdminFieldsBundle\Service\TreeConfigurator;
 
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
@@ -18,6 +21,10 @@ return static function (ContainerConfigurator $container)
         ->tag('assets.package', ['package' => AssetPackage::PACKAGE_NAME])
 
     ->set(EmbedConfigurator::class)
+        ->autowire()
+        ->autoconfigure()
+
+    ->set(TreeConfigurator::class)
         ->autowire()
         ->autoconfigure()
 
