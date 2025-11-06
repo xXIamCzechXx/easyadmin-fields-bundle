@@ -6,6 +6,7 @@ use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 
@@ -24,6 +25,32 @@ final class EasyAdminFieldsBundle extends AbstractBundle implements PrependExten
 
         if (interface_exists(AssetMapperInterface::class)) {
             $builder->setParameter('asset_mapper.paths', ['vendor/iamczech/easyadmin-fields-bundle/assets' => '@easyadmin_fields']);
+        }
+
+        $projectDir = $builder->getParameter('kernel.project_dir');
+        if (!file_exists($projectDir . '/importmap.php')) {
+            throw new InvalidConfigurationException(
+                '❌ Missing importmap.php file. Run: php bin/console importmap:install'
+            );
+        }
+
+        $importMap = include $projectDir . '/importmap.php';
+
+        $missingMaps = [];
+        if (!isset($importMap['@symfony/stimulus-bridge'])) {
+            $missingMaps[] = '@symfony/stimulus-bridge';
+        }
+        if (!isset($importMap['sortablejs'])) {
+            $missingMaps[] = 'sortablejs';
+        }
+
+        if (!empty($missingMaps)) {
+            throw new InvalidConfigurationException(sprintf(
+                "❌ Required JS packages for EasyAdminFieldsBundle are missing in importmap.php.\n\n" .
+                "👉 Please install them by running:\n" .
+                "   php bin/console importmap:require %s\n",
+                implode(' ', $missingMaps)
+            ));
         }
     }
 
