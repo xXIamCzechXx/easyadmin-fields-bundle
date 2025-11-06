@@ -20,21 +20,12 @@
     ],
     "require": {
         "php": ">=8.4",
-        "symfony/framework-bundle": "^7.4",
+        "symfony/framework-bundle": "^7.2",
         "easycorp/easyadmin-bundle": "^4.0",
         "symfony/stimulus-bundle": "^2.30"
     },
     "suggest": {
-        "npm-asset/sortablejs": "JavaScript library for drag-and-drop functionality. Install via `symfony console importmap:require sortablejs`.",
-        "@symfony/stimulus-bridge": "Required for Stimulus controllers to work (add to importmap.php). Install via `symfony console importmap:require @symfony/stimulus-bridge`."
-    },
-    "extra": {
-        "symfony": {
-            "asset-mapper": {
-                "paths": {
-                    "assets/vendor/sortablejs": "@sortablejs"
-                }
-            }
-        }
+        "npm-asset/sortablejs": "Provides drag 'n drop functionality. Install via `symfony console importmap:require sortablejs`.",
+        "@symfony/stimulus-bridge": "Required for Stimulus controllers to work. Install via `symfony console importmap:require @symfony/stimulus-bridge`."
     }
 }
