@@ -27,31 +27,31 @@ final class EasyAdminFieldsBundle extends AbstractBundle implements PrependExten
             $builder->setParameter('asset_mapper.paths', ['vendor/iamczech/easyadmin-fields-bundle/assets' => '@easyadmin_fields']);
         }
 
-        $projectDir = $builder->getParameter('kernel.project_dir');
-        if (!file_exists($projectDir . '/importmap.php')) {
-            throw new InvalidConfigurationException(
-                '❌ Missing importmap.php file. Run: php bin/console importmap:install'
-            );
-        }
-
-        $importMap = include $projectDir . '/importmap.php';
-
-        $missingMaps = [];
-        if (!isset($importMap['@symfony/stimulus-bridge'])) {
-            $missingMaps[] = '@symfony/stimulus-bridge';
-        }
-        if (!isset($importMap['sortablejs'])) {
-            $missingMaps[] = 'sortablejs';
-        }
-
-        if (!empty($missingMaps)) {
-            throw new InvalidConfigurationException(sprintf(
-                "❌ Required JS packages for EasyAdminFieldsBundle are missing in importmap.php.\n\n" .
-                "👉 Please install them by running:\n" .
-                "   php bin/console importmap:require %s\n",
-                implode(' ', $missingMaps)
-            ));
-        }
+//        $projectDir = $builder->getParameter('kernel.project_dir');
+//        if (!file_exists($projectDir . '/importmap.php')) {
+//            throw new InvalidConfigurationException(
+//                '❌ Missing importmap.php file. Run: php bin/console importmap:install'
+//            );
+//        }
+//
+//        $importMap = include $projectDir . '/importmap.php';
+//
+//        $missingMaps = [];
+//        if (!isset($importMap['@symfony/stimulus-bridge'])) {
+//            $missingMaps[] = '@symfony/stimulus-bridge';
+//        }
+//        if (!isset($importMap['sortablejs'])) {
+//            $missingMaps[] = 'sortablejs';
+//        }
+//
+//        if (!empty($missingMaps)) {
+//            throw new InvalidConfigurationException(sprintf(
+//                "❌ Required JS packages for EasyAdminFieldsBundle are missing in importmap.php.\n\n" .
+//                "👉 Please install them by running:\n" .
+//                "   php bin/console importmap:require %s\n",
+//                implode(' ', $missingMaps)
+//            ));
+//        }
     }
 
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
