@@ -36,7 +36,7 @@ final class EasyAdminFieldsBundle extends AbstractBundle implements PrependExten
         $bundles = $container->getParameter('kernel.bundles');
 
         if (isset($bundles['TwigBundle'])) {
-            $container->prependExtensionConfig('twig', ['form_themes' => ['@EasyAdminFields/embed.html.twig']]);
+            $container->prependExtensionConfig('twig', ['form_themes' => ['@EasyAdminFields/layouts/embed.html.twig']]);
         }
 
         $container->prependExtensionConfig('framework', [
@@ -73,7 +73,7 @@ final class EasyAdminFieldsBundle extends AbstractBundle implements PrependExten
         $bundles = $container->getParameter('kernel.bundles');
 
         if (isset($bundles['TwigBundle'])) {
-            $container->prependExtensionConfig('twig', ['form_themes' => ['@EasyAdminFields/embed.html.twig']]);
+            $container->prependExtensionConfig('twig', ['form_themes' => ['@EasyAdminFields/layouts/embed.html.twig']]);
         }
     }
 }
