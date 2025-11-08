@@ -6,48 +6,69 @@ import { Controller } from "@hotwired/stimulus";
 var controller_dependent = class extends Controller {
 
     connect() {
-        const options = getOptions(this.element);
+        let options = JSON.parse(this.element.getAttribute('data-dependent-field-options'));
+        let type = this.element.getAttribute('data-dependent-field');
+
         this.callbackUrl = options.callback_url;
         this.dependencies = options.dependencies;
         this.dependenciesFormGroup = [];
 
         this.dependencies.forEach(dependency => {
-            const formGroup = getFieldFormGroup(dependency);
+            let formGroup = getFieldFormGroup(dependency);
             if (!formGroup) {
                 return;
             }
 
-            formGroup.addEventListener('input', this.handle.bind(this));
+            if (type === 'hide') {
+                formGroup.addEventListener('input', this.handleHide.bind(this));
+            }
+            if (type === 'adapt') {
+                formGroup.addEventListener('input', this.handleAdapt.bind(this));
+            }
             this.dependenciesFormGroup.push(formGroup);
         });
 
         this.input = getFormGroupField(this.element);
 
         if (options.fetch_on_init) {
-            this.handle().then(r => console.log('initialize dependent field'));
+            if (type === 'hide') {
+                this.handleHide().catch(e => console.error(e));
+            }
+            if (type === 'adapt') {
+                this.handleAdapt().catch(e => console.error(e));
+            }
         }
     }
 
-    async handle() {
-        const hasEmptyOption = Array.from(this.input.options).some(option => option.value === "");
-        const oldValue = this.input.value;
-        const newOptions = await this.fetchOptions();
+    async handleAdapt() {
+        let hasEmptyOption = Array.from(this.input.options).some(option => option.value === "");
+        let oldValue = this.input.value;
+        let newOptions = await this.fetchOptions();
 
-        this.clearOptions();
-        this.setOptions(newOptions, hasEmptyOption, oldValue);
+        this.clearOptions().setOptions(newOptions, hasEmptyOption, oldValue);
+    }
+
+    async handleHide() {
+        let show = await this.fetchOptions();
+
+        if (show === true) {
+            showField(this.input);
+        } else {
+            hideField(this.input);
+        }
     }
 
     async fetchOptions() {
-        const params = new URLSearchParams();
+        let params = new URLSearchParams();
 
         this.dependencies.forEach(dependency => {
-            const formGroup = getFieldFormGroup(dependency);
+            let formGroup = getFieldFormGroup(dependency);
             if (!formGroup) {
                 return;
             }
 
-            const field = getFormGroupField(formGroup);
-            const value = getValue(field);
+            let field = getFormGroupField(formGroup);
+            let value = getValue(field);
 
             if (Array.isArray(value)) {
                 value.forEach(singleValue => {
@@ -58,8 +79,8 @@ var controller_dependent = class extends Controller {
             }
         });
 
-        const queryParams = new URLSearchParams(params).toString();
-        const response = await fetch(`${this.callbackUrl}?${queryParams}`);
+        let query = new URLSearchParams(params).toString();
+        let response = await fetch(`${this.callbackUrl}?${query}`);
 
         return await response.json();
     }
@@ -72,14 +93,15 @@ var controller_dependent = class extends Controller {
             return;
         }
 
-        const control = this.input.tomselect;
-        control.lock();
-        control.clear();
-        control.clearOptions();
+        this.input.tomselect.lock();
+        this.input.tomselect.clear();
+        this.input.tomselect.clearOptions();
+
+        return this;
     }
 
     setOptions(options, hasEmptyOption, previousOption = null) {
-        const input = this.input;
+        let input = this.input;
 
         if (!isTomSelect(input)) {
             if (hasEmptyOption) {
@@ -99,8 +121,8 @@ var controller_dependent = class extends Controller {
             return;
         }
 
-        const control = input.tomselect;
-        const currentValue = previousOption || control.getValue();
+        let control = input.tomselect;
+        let currentValue = previousOption || control.getValue();
         control.addOptions(options);
 
         if (currentValue && control.options[currentValue]) {
@@ -115,7 +137,8 @@ var controller_dependent = class extends Controller {
 
     disconnect() {
         this.dependenciesFormGroup.forEach(formGroup => {
-            formGroup.removeEventListener('input', this.handle.bind(this));
+            formGroup.removeEventListener('input', this.handleAdapt.bind(this));
+            formGroup.removeEventListener('input', this.handleHide.bind(this));
         });
     }
 }
@@ -137,22 +160,12 @@ export const isTomSelect = (element) => {
 };
 
 export const getFieldFormGroup = (field) => {
-    const input = document.querySelector(`[name*="[${field}]"]`);
+    let input = document.querySelector(`[name*="[${field}]"]`);
     if (!input) {
         return null;
     }
 
     return getInputClosestFormGroup(input);
-};
-
-export const getFieldFormGroups = (field) => {
-    const formGroup = document.querySelector(`[data-prototype*="_${field}__"]`);
-    if (formGroup) {
-        return [formGroup];
-    }
-
-    const inputs = document.querySelectorAll(`[name*="[${field}]"]`);
-    return Array.from(inputs).map(getInputClosestFormGroup);
 };
 
 export const getFormGroupField = (formGroup) => {
@@ -167,46 +180,14 @@ export const getInputClosestFormGroup = (input) => {
     return input.closest('.js-form-group-override') || input.closest('.form-group');
 };
 
-export const getOptions = (input) => {
-    const data = input.getAttribute('data-dependent-field-options');
-
-    if (!data) {
-        return {
-            callback_url: "",
-            dependencies: [],
-            fetch_on_init: false
-        };
-    }
-
-    return JSON.parse(data);
-};
-
 export const hideField = (field) => {
-    const formGroups = getFieldFormGroups(field);
-
-    formGroups.forEach(formGroup => {
-        formGroup.style.display = "none";
-
-        const inputs = getFormGroupFields(formGroup);
-        inputs.forEach(input => {
-            input.setAttribute('disabled', 'mask');
-        });
-    });
+    const formGroup = getInputClosestFormGroup(field);
+    formGroup.style.display = "none";
 };
 
 export const showField = (field) => {
-    const formGroups = getFieldFormGroups(field);
-
-    formGroups.forEach(formGroup => {
-        formGroup.style.display = null;
-
-        const inputs = getFormGroupFields(formGroup);
-        inputs.forEach(input => {
-            if (input.getAttribute('disabled') === 'mask') {
-                input.removeAttribute('disabled');
-            }
-        });
-    });
+    const formGroup = getInputClosestFormGroup(field);
+    formGroup.style.display = null;
 };
 
 export {

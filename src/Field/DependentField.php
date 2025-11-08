@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class DependentField
 {
-    public static function adapt(FieldInterface $field, array $options): FieldInterface
+    public static function adapt(FieldInterface $field, array $options = []): FieldInterface
     {
         $resolver = new OptionsResolver();
         self::configureOptions($resolver);
@@ -38,6 +38,29 @@ final class DependentField
                 'row_attr' => [
                     'data-controller' => 'iamczech--easyadmin-fields-bundle--dependent',
                     'data-dependent-field-options' => self::encodeOptions($options),
+                    'data-dependent-field' => 'adapt',
+                ],
+            ]);
+    }
+
+    public static function hide(FieldInterface $field, array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        self::configureOptions($resolver);
+
+        $options = $resolver->resolve($options);
+
+        if (!method_exists($field, 'setFormTypeOptions')) {
+            return $field;
+        }
+
+        return $field
+            ->setFormTypeOptions([
+                'row_attr' => [
+                    'data-controller' => 'iamczech--easyadmin-fields-bundle--dependent',
+                    'data-dependent-field-options' => self::encodeOptions($options),
+                    'data-dependent-field' => 'hide',
+                    'style' => 'display: none;',
                 ],
             ]);
     }
