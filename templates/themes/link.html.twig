@@ -1,16 +1,27 @@
 {% extends '@EasyAdmin/crud/form_theme.html.twig' %}
 
 {% block choice_widget_collapsed %}
-    {% if form.vars.attr['urlToAction'] is defined and form.vars.attr['crudControllerFqcn'] is defined and form.vars.value is not empty and form.vars.value is same as(form.vars.value|ea_as_string) %}
-        {% set url = form.vars.attr['urlToAction'].setEntityId(form.vars.value).setController(form.vars.attr['crudControllerFqcn']).generateUrl() %}
+    {% if form.vars.attr['url'] is defined and form.vars.value is not empty and form.vars.value is same as(form.vars.value|ea_as_string) %}
+        {% set url = form.vars.attr['url']
+            .setEntityId(form.vars.value)
+            .setController(form.vars.attr['crudControllerFqcn'])
+            .setAction(form.vars.attr['crudAction'])
+            .generateUrl()
+        %}
         <div class="input-group">
             {{ parent() }}
             {% if url %}
-                <span class="input-group-text p-1 px-2 h-100 m-0">
-                <a href="{{ url }}" class="" title="detail" target="_blank">
-                    <i class="fa fa-pencil"></i>
+                <a href="{{ url }}" class="input-group-text p-2 px-2 h-100 m-0" title="detail" target="{{ form.vars.attr['target'] }}">
+                    <i class="
+                        {% if form.vars.attr['crudAction'] == 'detail' %}
+                            fa-solid fa-eye
+                        {% elseif form.vars.attr['crudAction'] == 'edit' %}
+                            fa fa-pencil
+                        {% else %}
+                            fa-solid fa-xmark
+                        {% endif %}
+                    "></i>
                 </a>
-            </span>
             {% endif %}
         </div>
     {% else %}

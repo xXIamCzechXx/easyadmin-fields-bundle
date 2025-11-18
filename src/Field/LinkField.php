@@ -2,10 +2,10 @@
 
 namespace Iamczech\EasyAdminFieldsBundle\Field;
 
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,10 +17,14 @@ final class LinkField
 {
     use FieldTrait;
 
-    public const URL_TO_ACTION = 'urlToAction';
+    public const URL = 'url';
     public const TARGET = 'target';
-    public const OPTION_CRUD_CONTROLLER = 'crudControllerFqcn';
 
+    private const SUPPORTED_CRUD_ACTIONS = [Crud::PAGE_DETAIL, Crud::PAGE_EDIT];
+
+    /**
+     * @throws \InvalidArgumentException
+     */
     public static function link(FieldInterface $field, array $options = []): FieldInterface
     {
         $resolver = new OptionsResolver();
@@ -34,19 +38,29 @@ final class LinkField
 
         if (!$field instanceof AssociationField) {
             throw new \InvalidArgumentException(sprintf(
-                "Adapted DependentField should be an instance of AssociationField, instance of %s given",
+                "Associated field to a LinkField should be an instance of AssociationField, instance of %s given",
                 get_class($field)
             ));
         }
-        $url = $options[self::URL_TO_ACTION];
+
+        $adminUrlGeneratorDto = $options[self::URL];
+
+        if (!in_array($adminUrlGeneratorDto->get(EA::CRUD_ACTION), self::SUPPORTED_CRUD_ACTIONS)) {
+            throw new \InvalidArgumentException(sprintf(
+                "Invalid action for LinkField: %s. Use a different action than %s, available actions are: %s",
+                get_class($field), $adminUrlGeneratorDto->get(EA::CRUD_ACTION), implode(', ', self::SUPPORTED_CRUD_ACTIONS)
+            ));
+        }
 
         return $field
             ->addFormTheme('@EasyAdminFields/themes/link.html.twig')
             ->setFormTypeOption('attr', [
-                self::URL_TO_ACTION => $url,
-                self::OPTION_CRUD_CONTROLLER => $url->get(self::OPTION_CRUD_CONTROLLER),
-                self::TARGET => $options[self::TARGET] ?? '_blank',
-            ]);
+                self::URL => $adminUrlGeneratorDto,
+                EA::CRUD_CONTROLLER_FQCN => $adminUrlGeneratorDto->get(EA::CRUD_CONTROLLER_FQCN),
+                EA::CRUD_ACTION => $adminUrlGeneratorDto->get(EA::CRUD_ACTION),
+                self::TARGET => $options[self::TARGET],
+            ])
+            ->setFormTypeOption('row_attr.data-controller', 'iamczech--easyadmin-fields-bundle--link');
     }
 
     private static function configureOptions(OptionsResolver $resolver): void
@@ -56,7 +70,7 @@ final class LinkField
         ]);
 
          $resolver
-             ->setRequired(self::URL_TO_ACTION)
-             ->setAllowedTypes(self::URL_TO_ACTION, AdminUrlGeneratorInterface::class);
+             ->setRequired(self::URL)
+             ->setAllowedTypes(self::URL, AdminUrlGeneratorInterface::class);
     }
 }

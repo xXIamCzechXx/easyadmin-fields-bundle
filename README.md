@@ -132,7 +132,7 @@ The controller automatically handles:
 
 ---
 
-### 🧹 **EmbedField**
+### 🧩 **EmbedField**
 Embed nested `CrudController` directly into forms (inline CRUD editing).
 It is important to set callback url for a iframe via setCallbackUrl() and generate it via adminUrlGenerator.
 The default page is Crud::PAGE_INDEX action, but you can change it via the setAction() method.
@@ -158,7 +158,7 @@ public function configureCrud(Crud $crud): Crud
 }
 ```
 
-### 🧹 **TreeConfigurator**
+### 🌳 **TreeConfigurator**
 You must use `NestedSetEntity` and implement `TreeInterface` directly into your entity where you want to show tree hierarchy.
 It is highly recommended to use `Gedmo\Tree` annotation with Strategy::NESTED.
 
@@ -200,16 +200,57 @@ public function configureCrud(Crud $crud): Crud
 }
 ```
 
+### 🔗 **LinkField**
+Render a related entity as a selectable field (ChoiceField) enhanced with a dynamic action link (supported actions: edit, detail).
+The field automatically generates per-entity URLs using AdminUrlGenerator and respects user permissions.
+
+Only URLs the user is allowed to access (based on the configured CRUD action) are exposed to the frontend.
+
+**Usage:**
+
+```php
+yield LinkField::link(AssociationField::new('person', 'Person'), [
+        LinkField::URL => $this->adminUrlGenerator->setController(SomeCrudController::class)->setAction(Crud::PAGE_DETAIL/Crud::PAGE_EDIT),
+        LinkField::TARGET => '_blank'/'_self'
+    ]
+);
+```
+
+NOTE: Works also with ->autocomplete() fields. But only works for "ToOne" relations!
+
+```php
+yield LinkField::link(AssociationField::new('person', 'Person')
+    ->autocomplete(), [
+        LinkField::URL => $this->adminUrlGenerator->setController(SomeCrudController::class)->setAction(Crud::PAGE_DETAIL/Crud::PAGE_EDIT),
+        LinkField::TARGET => '_blank'/'_self'
+    ]
+);
+```
+
+NOTE: If you want link to follow your actual Crud Action, then don't manually do ->setAction(), it will automatically set Action to your current action.
+
+```php
+public function configureCrud(Crud $crud): Crud
+{
+    $crud = parent::configureCrud($crud);
+
+    TreeConfigurator::applyTreeLayout($crud);
+
+    return $crud;
+}
+```
+
 ## ⚙️ Stimulus Controllers
 
 The bundle provides four native controllers:
 
-| Controller  | Description                                             |
-|-------------|---------------------------------------------------------|
-| `dependent` | Handles asynchronous loading of dependent field options |
-| `locked`    | Manages field unlocking with confirmation alerts        |
-| `embed`     | Resize iframe to its content height                     |
-| `tree`      | Generates wonderful tree hierarchy with drag 'n drop    |
+| Controller  | Description                                                |
+|-------------|------------------------------------------------------------|
+| `dependent` | Handles asynchronous loading of dependent field options    |
+| `locked`    | Manages field unlocking with confirmation alerts           |
+| `embed`     | Resize iframe to its content height                        |
+| `tree`      | Generates wonderful tree hierarchy with drag 'n drop       |
+| `link`      | Possibility to redirect to ToOne relation edit/detail page |
 
 If you're using AssetMapper, they’re automatically registered.
 Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
@@ -223,6 +264,7 @@ Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
 * **DependentField**: dynamic dependency management between fields
 * **EmbedField**: rendering crud controllers within another crud controller with a custom popup for a better UX and consistent styling inside EasyAdmin.
 * **LockedTextField**: controlled unlocking of grouped inputs via confirmation
+* **LinkField**: possibility to redirect to ToOne relation edit/detail page
 * **TreeConfigurator**: controlled unlocking of grouped inputs via confirmation
 
 ### 🧠 Upcoming Features
