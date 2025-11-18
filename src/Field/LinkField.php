@@ -19,6 +19,7 @@ final class LinkField
 
     public const URL = 'url';
     public const TARGET = 'target';
+    public const PAGE_NAME = 'pageName';
 
     private const SUPPORTED_CRUD_ACTIONS = [Crud::PAGE_DETAIL, Crud::PAGE_EDIT];
 
@@ -32,7 +33,7 @@ final class LinkField
 
         $options = $resolver->resolve($options);
 
-        if (!method_exists($field, 'setFormTypeOptions')) {
+        if (!method_exists($field, 'setFormTypeOptions') || !in_array($options[self::PAGE_NAME], self::SUPPORTED_CRUD_ACTIONS)) {
             return $field;
         }
 
@@ -71,6 +72,8 @@ final class LinkField
 
          $resolver
              ->setRequired(self::URL)
-             ->setAllowedTypes(self::URL, AdminUrlGeneratorInterface::class);
+             ->setRequired(self::PAGE_NAME)
+             ->setAllowedTypes(self::URL, AdminUrlGeneratorInterface::class)
+             ->setAllowedTypes(self::PAGE_NAME, 'string');
     }
 }

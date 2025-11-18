@@ -211,7 +211,8 @@ Only URLs the user is allowed to access (based on the configured CRUD action) ar
 ```php
 yield LinkField::link(AssociationField::new('person', 'Person'), [
         LinkField::URL => $this->adminUrlGenerator->setController(SomeCrudController::class)->setAction(Crud::PAGE_DETAIL/Crud::PAGE_EDIT),
-        LinkField::TARGET => '_blank'/'_self'
+        LinkField::TARGET => '_blank'/'_self',
+        LinkField::PAGE_NAME => $pageName
     ]
 );
 ```
@@ -222,7 +223,8 @@ NOTE: Works also with ->autocomplete() fields. But only works for "ToOne" relati
 yield LinkField::link(AssociationField::new('person', 'Person')
     ->autocomplete(), [
         LinkField::URL => $this->adminUrlGenerator->setController(SomeCrudController::class)->setAction(Crud::PAGE_DETAIL/Crud::PAGE_EDIT),
-        LinkField::TARGET => '_blank'/'_self'
+        LinkField::TARGET => '_blank'/'_self',
+        LinkField::PAGE_NAME => $pageName
     ]
 );
 ```
