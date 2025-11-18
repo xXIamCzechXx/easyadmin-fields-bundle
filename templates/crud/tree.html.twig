@@ -13,98 +13,121 @@
     {% set has_filters = filters|length > 0 %}
     {% set num_results = entities|length %}
 
-    <ul class="easyadmintree_tree">
-        <li class="tree-item easyadmintree_tree-item">
-        <span class="easyadmintree_tree-item-label easyadmintree_tree-item-title">
-            <span class="drag-handle">&nbsp;</span>
-            {% for field in entities|filter(e => e.isAccessible)|first.fields ?? [] %}
-                <div style="{{ loop.first ? 'min-width: 360px;' : 'min-width: 260px;' }} margin-left: 5px;"
-                     data-column="{{ field.property }}"
-                     class="header-for-{{ field.cssClass }}"
-                     dir="{{ ea.i18n.textDirection }}">
-                    <span>{{ field.label|trans|raw }}</span>
-                </div>
-            {% endfor %}
-            <div class="easyadmintree_tree-item-actions"></div>
-        </span>
-        </li>
-    </ul>
+    {% if num_results > 0 %}
+        <ul class="easyadmintree_tree">
+            <li class="tree-item easyadmintree_tree-item">
+            <span class="easyadmintree_tree-item-label easyadmintree_tree-item-title">
+                <span class="drag-handle">&nbsp;</span>
+                {% for field in entities|filter(e => e.isAccessible)|first.fields ?? [] %}
+                    <div style="{{ loop.first ? 'min-width: 360px;' : 'min-width: 260px;' }} margin-left: 5px;"
+                         data-column="{{ field.property }}"
+                         class="header-for-{{ field.cssClass }}"
+                         dir="{{ ea.i18n.textDirection }}">
+                        <span>{{ field.label|trans|raw }}</span>
+                    </div>
+                {% endfor %}
+                <div class="easyadmintree_tree-item-actions"></div>
+            </span>
+            </li>
+        </ul>
 
-    <ul class="easyadmintree_tree" data-controller="iamczech--easyadmin-fields-bundle--tree" data-root="true">
-        {% set previous_level = 0 %}
-        {% for entity in entities %}
-            {% if entity.isAccessible %}
-                {% set level = entity.instance.level %}
-                {% if level < previous_level %}
-                    {% for i in range(level, previous_level - 1) %}
-                        </li></ul>
-                    {% endfor %}
-                {% elseif level == previous_level %}
-                    </li>
-                {% endif %}
-
-                {% if loop.first %}
-                    {% dump(entity) %}
-                {% endif %}
-                <li class="tree-item easyadmintree_tree-item"
-                    data-action="dblclick->admin#redirect"
-                    data-url="{{ ea_url().setAction('edit').setEntityId(entity.primaryKeyValue) }}"
-                    data-id="{{ entity.instance.id }}"
-                    data-left="{{ entity.instance.left }}"
-                    data-right="{{ entity.instance.right }}"
-                    data-level="{{ entity.instance.level }}"
-                    data-root="{{ entity.instance.root }}"
-                    data-parent="{{ entity.instance.parent ? entity.instance.parent.id : '' }}"
-                    data-class="{{ entity.fqcn }}">
-                    <span class="easyadmintree_tree-item-label">
-                        <span class="drag-handle">☰</span>
-                        {% for field in entity.fields %}
-                            {% set margin = level * 20 %}
-                            <span style="{{ loop.first ? 'min-width: calc(372px - ' ~ margin ~ 'px);' : 'min-width: 260px;' }}"
-                                  data-column="{{ field.property }}"
-                                  data-label="{{ field.label|trans|e('html') }}"
-                                  class="{{ field.cssClass }}"
-                                  dir="{{ ea.i18n.textDirection }}">
-                                {{ include(field.templatePath, { field: field, entity: entity }, with_context = false) }}
-                            </span>
+        <ul class="easyadmintree_tree" data-controller="iamczech--easyadmin-fields-bundle--tree" data-root="true">
+            {% set previous_level = 0 %}
+            {% for entity in entities %}
+                {% if entity.isAccessible %}
+                    {% set level = entity.instance.level %}
+                    {% if level < previous_level %}
+                        {% for i in range(level, previous_level - 1) %}
+                            </li></ul>
                         {% endfor %}
-                        <span class="easyadmintree_tree-item-actions">
-                            {% block entity_actions %}{{ parent() }}{% endblock %}
-                        </span>
-                    </span>
-
-                    {% if entity.instance.children|length %}
-                        <ul class="easyadmintree_tree" data-root="false">
-                    {% else %}
-                        <ul class="easyadmintree_tree" data-root="false"></ul>
+                    {% elseif level == previous_level %}
+                        </li>
                     {% endif %}
 
-                    {% set previous_level = level %}
+                    {% if loop.first %}
+                        {% dump(entity) %}
+                    {% endif %}
+                    <li class="tree-item easyadmintree_tree-item"
+                        data-action="dblclick->admin#redirect"
+                        data-url="{{ ea_url().setAction('edit').setEntityId(entity.primaryKeyValue) }}"
+                        data-id="{{ entity.instance.id }}"
+                        data-left="{{ entity.instance.left }}"
+                        data-right="{{ entity.instance.right }}"
+                        data-level="{{ entity.instance.level }}"
+                        data-root="{{ entity.instance.root }}"
+                        data-parent="{{ entity.instance.parent ? entity.instance.parent.id : '' }}"
+                        data-class="{{ entity.fqcn }}">
+                        <span class="easyadmintree_tree-item-label">
+                            <span class="drag-handle">☰</span>
+                            {% for field in entity.fields %}
+                                {% set margin = level * 20 %}
+                                <span style="{{ loop.first ? 'min-width: calc(372px - ' ~ margin ~ 'px);' : 'min-width: 260px;' }}"
+                                      data-column="{{ field.property }}"
+                                      data-label="{{ field.label|trans|e('html') }}"
+                                      class="{{ field.cssClass }}"
+                                      dir="{{ ea.i18n.textDirection }}">
+                                    {{ include(field.templatePath, { field: field, entity: entity }, with_context = false) }}
+                                </span>
+                            {% endfor %}
+                            <span class="easyadmintree_tree-item-actions">
+                                {% block entity_actions %}{{ parent() }}{% endblock %}
+                            </span>
+                        </span>
+
+                        {% if entity.instance.children|length %}
+                            <ul class="easyadmintree_tree" data-root="false">
+                        {% else %}
+                            <ul class="easyadmintree_tree" data-root="false"></ul>
+                        {% endif %}
+
+                        {% set previous_level = level %}
+                    {% endif %}
+                {% endfor %}
+                {% for i in range(0, previous_level - 1) %}
+                    </li></ul>
+                {% endfor %}
+            </li>
+        </ul>
+
+        {% if entities|length > 0 %}
+            <div class="content-panel-footer without-padding without-border">
+                {% block paginator %}
+                    {{ include(ea.templatePath('crud/paginator'), { render_detailed_pagination: not some_results_are_hidden }) }}
+                {% endblock paginator %}
+            </div>
+        {% endif %}
+
+        {% block delete_form %}
+            {{ include('@EasyAdmin/crud/includes/_delete_form.html.twig', with_context = false) }}
+        {% endblock delete_form %}
+
+        {% if has_filters %}
+            {{ include('@EasyAdmin/crud/includes/_filters_modal.html.twig') }}
+        {% endif %}
+
+        {% if has_batch_actions %}
+            {{ include('@EasyAdmin/crud/includes/_batch_action_modal.html.twig', {}, with_context = false) }}
+        {% endif %}
+    {% else %}
+        {% block table_body_empty %}
+            {% for i in 1..14 %}
+                <tr class="empty-row">
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                    <td><span></span></td>
+                </tr>
+
+                {% if 3 == loop.index %}
+                    <tr class="no-results">
+                        <td colspan="100">
+                            {{ t('datagrid.no_results', ea.i18n.translationParameters, 'EasyAdminBundle')|trans }}
+                        </td>
+                    </tr>
                 {% endif %}
             {% endfor %}
-            {% for i in range(0, previous_level - 1) %}
-                </li></ul>
-            {% endfor %}
-        </li>
-    </ul>
-
-    {% if entities|length > 0 %}
-        <div class="content-panel-footer without-padding without-border">
-            {% block paginator %}
-                {{ include(ea.templatePath('crud/paginator'), { render_detailed_pagination: not some_results_are_hidden }) }}
-            {% endblock paginator %}
-        </div>
-    {% endif %}
-
-    {% block delete_form %}
-        {{ include('@EasyAdmin/crud/includes/_delete_form.html.twig', with_context = false) }}
-    {% endblock delete_form %}
-
-    {% if has_filters %}
-        {{ include('@EasyAdmin/crud/includes/_filters_modal.html.twig') }}
-    {% endif %}
-
-    {% if has_batch_actions %}
-        {{ include('@EasyAdmin/crud/includes/_batch_action_modal.html.twig', {}, with_context = false) }}
+        {% endblock table_body_empty %}
     {% endif %}
 {% endblock main %}
