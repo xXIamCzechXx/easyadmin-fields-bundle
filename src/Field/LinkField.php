@@ -18,6 +18,8 @@ final class LinkField
     use FieldTrait;
 
     public const URL_TO_ACTION = 'urlToAction';
+    public const TARGET = 'target';
+    public const OPTION_CRUD_CONTROLLER = 'crudControllerFqcn';
 
     public static function link(FieldInterface $field, array $options = []): FieldInterface
     {
@@ -36,18 +38,23 @@ final class LinkField
                 get_class($field)
             ));
         }
+        $url = $options[self::URL_TO_ACTION];
 
         return $field
             ->addFormTheme('@EasyAdminFields/themes/link.html.twig')
-            ->setFormTypeOptions([
-                'attr' => [
-                    'urlToAction' => $options[self::URL_TO_ACTION],
-                ],
+            ->setFormTypeOption('attr', [
+                self::URL_TO_ACTION => $url,
+                self::OPTION_CRUD_CONTROLLER => $url->get(self::OPTION_CRUD_CONTROLLER),
+                self::TARGET => $options[self::TARGET] ?? '_blank',
             ]);
     }
 
     private static function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setDefaults([
+            self::TARGET => '_blank',
+        ]);
+
          $resolver
              ->setRequired(self::URL_TO_ACTION)
              ->setAllowedTypes(self::URL_TO_ACTION, AdminUrlGeneratorInterface::class);

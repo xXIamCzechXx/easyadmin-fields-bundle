@@ -1,8 +1,8 @@
 {% extends '@EasyAdmin/crud/form_theme.html.twig' %}
 
 {% block choice_widget_collapsed %}
-    {% if form.vars.attr['urlToAction'] is defined and form.vars.value is not empty and form.vars.value is same as(form.vars.value|ea_as_string) %}
-        {% set url = form.vars.attr['urlToAction'].setEntityId(form.vars.value).generateUrl %}
+    {% if form.vars.attr['urlToAction'] is defined and form.vars.attr['crudControllerFqcn'] is defined and form.vars.value is not empty and form.vars.value is same as(form.vars.value|ea_as_string) %}
+        {% set url = form.vars.attr['urlToAction'].setEntityId(form.vars.value).setController(form.vars.attr['crudControllerFqcn']).generateUrl() %}
         <div class="input-group">
             {{ parent() }}
             {% if url %}
