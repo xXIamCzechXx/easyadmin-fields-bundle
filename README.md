@@ -142,6 +142,7 @@ The default page is Crud::PAGE_INDEX action, but you can change it via the setAc
 ```php
 yield EmbedField::new('entities')
     ->setCallbackUrl($this->adminUrlGenerator
+        ->unsetAll() // important for embedded forms to work, so they do not inherit the filters from the parent!
         ->setController(EntityCrudController::class)
 ```
 

@@ -8,19 +8,21 @@
             .setAction(form.vars.attr['crudAction'])
             .generateUrl()
         %}
-        <div class="input-group">
+        <div class="input-group iamczech--link-group">
             {{ parent() }}
             {% if url %}
-                <a href="{{ url }}" class="input-group-text p-2 px-2 h-100 m-0" title="detail" target="{{ form.vars.attr['target'] }}">
-                    <i class="
-                        {% if form.vars.attr['crudAction'] == 'detail' %}
-                            fa-solid fa-eye
-                        {% elseif form.vars.attr['crudAction'] == 'edit' %}
-                            fa fa-pencil
-                        {% else %}
-                            fa-solid fa-xmark
-                        {% endif %}
-                    "></i>
+                <a href="{{ url }}" class="btn iamczech--link-button" title="detail" target="{{ form.vars.attr['target'] }}">
+                    <span class="icon">
+                        <i class="
+                            {% if form.vars.attr['crudAction'] == 'detail' %}
+                                fa-solid fa-eye
+                            {% elseif form.vars.attr['crudAction'] == 'edit' %}
+                                fa fa-pencil
+                            {% else %}
+                                fa-solid fa-xmark
+                            {% endif %}
+                        "></i>
+                    </span>
                 </a>
             {% endif %}
         </div>

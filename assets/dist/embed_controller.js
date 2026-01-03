@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
  */
-var controller_embed = class extends Controller {
+const controller_embed = class extends Controller {
 
     /**
      * Resize iframes when is loaded and also when the height of its content changes

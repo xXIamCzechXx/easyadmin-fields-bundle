@@ -1,0 +1,149 @@
+/* === Tree hierarchy (EasyAdmin custom tree) === */
+.easyadmintree_tree_field-container {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 15px 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Ul wrapper */
+.easyadmintree_tree_field,
+.easyadmintree_tree {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Each tree row */
+.easyadmintree_tree_field-item,
+.easyadmintree_tree-item {
+    margin-top: 6px;
+    padding-left: 20px;
+    border-left: 2px solid #dee2e6;
+}
+
+/* Label of a row */
+.easyadmintree_tree_field-item-label,
+.easyadmintree_tree-item-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    padding: 6px 12px;
+    background-color: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 0.375rem;
+    color: #212529;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    text-align: left;
+    gap: 10px;
+}
+
+.easyadmintree_tree-item-title {
+    background: lightgray;
+    pointer-events: none;
+}
+
+/* Left section (drag handle + name) */
+.easyadmintree_tree-item-label-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Right section (actions) */
+.easyadmintree_tree-item-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.easyadmintree_tree-item-action {
+    padding: 0 4px;
+    font-size: 0.875rem;
+    color: #6c757d;
+    transition: color 0.15s ease-in-out;
+}
+
+.easyadmintree_tree-item-action:hover {
+    color: #0a58ca;
+}
+
+/* Hover efect */
+.easyadmintree_tree_field-item-label:hover,
+.easyadmintree_tree-item-label:hover {
+    background-color: #e9f2ff;
+    border-color: #91b8f9;
+    color: #0a58ca;
+}
+
+/* Active row */
+.easyadmintree_tree_field-item--active .easyadmintree_tree_field-item-label,
+.easyadmintree_tree-item--active .easyadmintree_tree-item-label {
+    background-color: #dbeafe;
+    border-color: #3b82f6;
+    color: #0a58ca;
+    font-weight: 500;
+}
+
+/* Icons / collapse */
+.easyadmintree_tree-item-label i {
+    color: #6c757d;
+    margin-right: 6px;
+    font-size: 0.9rem;
+}
+.easyadmintree_tree-item-label i.folder {
+    color: #f0ad4e;
+}
+
+/* Drag handle */
+.drag-handle {
+    cursor: grab;
+    color: #9ca3af;
+    font-size: 0.95rem;
+}
+.drag-handle:hover {
+    color: #2563eb;
+}
+
+/* === Responsivita === */
+@media (max-width: 768px) {
+    .easyadmintree_tree-item-label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .easyadmintree_tree-item-actions {
+        width: 100%;
+        justify-content: flex-start;
+        margin-left: 0;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 6px;
+    }
+
+    .easyadmintree_tree-item-label-left {
+        width: 100%;
+        white-space: normal;
+    }
+
+    .easyadmintree_tree-item span[data-column] {
+        min-width: unset !important;
+        width: 100%;
+        word-wrap: break-word;
+    }
+}
+
+/* TODO::Rewrite this to a bundle css ↑ */

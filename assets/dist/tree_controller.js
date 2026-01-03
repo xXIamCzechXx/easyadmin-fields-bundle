@@ -4,7 +4,7 @@ import Sortable from 'sortablejs'
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
  */
-var controller_tree = class extends Controller {
+const controller_tree = class extends Controller {
 
     /**
      * Documentation: https://github.com/SortableJS/Sortable

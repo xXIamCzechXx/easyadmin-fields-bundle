@@ -7,7 +7,7 @@
         "dist"
     ],
     "config": {
-        "css_source": "assets/styles/style.css"
+        "css_source": "assets/styles/"
     },
     "symfony": {
         "controllers": {
@@ -31,6 +31,12 @@
             },
             "tree": {
                 "main": "dist/tree_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            },
+            "copy": {
+                "main": "dist/copy_controller.js",
                 "webpackMode": "lazy",
                 "fetch": "lazy",
                 "enabled": true

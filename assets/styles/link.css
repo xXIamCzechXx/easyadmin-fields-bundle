@@ -1,0 +1,11 @@
+/* === Link Field (EasyAdmin custom link) === */
+.iamczech--link-group>:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback):not(.input-group-text):not(button):not(.btn) {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    margin-left: calc(var(--bs-border-width)*-1);
+}
+
+.iamczech--link-button {
+    height: 30px;
+    margin-top: 1px;
+}

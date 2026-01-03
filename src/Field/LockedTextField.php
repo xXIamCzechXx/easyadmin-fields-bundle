@@ -4,6 +4,7 @@ namespace Iamczech\EasyAdminFieldsBundle\Field;
 
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
+use Iamczech\EasyAdminFieldsBundle\Form\Type\LockedTextType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -24,44 +25,40 @@ class LockedTextField implements FieldInterface
             ->setProperty($propertyName)
             ->setLabel($label)
             ->setTemplatePath('admin/field/name.html.twig')
-            ->setFormType(TextType::class)
-            ->setFormTypeOptions([
-                'attr.data-controller' => 'iamczech--easyadmin-fields-bundle--locked',
-                'attr.data-action' => 'click->iamczech--easyadmin-fields-bundle--locked#unlock',
-                'attr.readonly' => 'readonly',
-            ])
-            ->setFormTypeOption(self::OPTION_UNLOCK_GROUP, 'default')
-            ->setFormTypeOption(self::OPTION_CONTENT_TEXT, 'Accept changes of locked fields?')
-            ->setFormTypeOption(self::OPTION_CONFIRM_TEXT, 'Confirm')
-            ->setFormTypeOption(self::OPTION_CANCEL_TEXT, 'Cancel')
+            ->setFormType(LockedTextType::class)
+            ->addFormTheme('@EasyAdminFields/themes/locked.html.twig')
             ->addCssClass('field-text')
-            ->setDefaultColumns('col-md-6 col-xxl-5');
+            ->setDefaultColumns('col-md-6 col-xxl-5')
+            ->setCustomOption(self::OPTION_UNLOCK_GROUP, 'default')
+            ->setCustomOption(self::OPTION_CONTENT_TEXT, 'Accept changes of locked fields?')
+            ->setCustomOption(self::OPTION_CONFIRM_TEXT, 'Confirm')
+            ->setCustomOption(self::OPTION_CANCEL_TEXT, 'Cancel');
     }
 
     public function setUnlockGroup(?string $group): self
     {
-        $this->setFormTypeOption(self::OPTION_UNLOCK_GROUP, $group);
+        $this->setCustomOption(self::OPTION_UNLOCK_GROUP, $group);
 
         return $this;
     }
 
     public function setContentText(?string $text): self
     {
-        $this->setFormTypeOption(self::OPTION_CONTENT_TEXT, $text);
+        $this->setCustomOption(self::OPTION_CONTENT_TEXT, $text);
 
         return $this;
     }
 
     public function setConfirmText(?string $text): self
     {
-        $this->setFormTypeOption(self::OPTION_CONFIRM_TEXT, $text);
+        $this->setCustomOption(self::OPTION_CONFIRM_TEXT, $text);
 
         return $this;
     }
 
     public function setCancelText(?string $text): self
     {
-        $this->setFormTypeOption(self::OPTION_CANCEL_TEXT, $text);
+        $this->setCustomOption(self::OPTION_CANCEL_TEXT, $text);
 
         return $this;
     }

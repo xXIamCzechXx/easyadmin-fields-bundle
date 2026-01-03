@@ -27,22 +27,23 @@ final class EasyAdminFieldsBundle extends AbstractBundle implements PrependExten
         }
     }
 
-    public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
+    public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        if (!$this->isAssetMapperAvailable($container)) {
+        if (!$this->isAssetMapperAvailable($builder)) {
             return;
         }
 
-        $bundles = $container->getParameter('kernel.bundles');
+        $bundles = $builder->getParameter('kernel.bundles');
 
         if (isset($bundles['TwigBundle'])) {
-            $container->prependExtensionConfig('twig', ['form_themes' => ['@EasyAdminFields/layouts/embed.html.twig']]);
+            $builder->prependExtensionConfig('twig', ['form_themes' => ['@EasyAdminFields/layouts/embed.html.twig']]);
         }
 
-        $container->prependExtensionConfig('framework', [
+        $builder->prependExtensionConfig('framework', [
             'asset_mapper' => [
                 'paths' => [
                     $this->getPath() . '/assets/dist' => '@iamczech/easyadmin-fields',
+                    $this->getPath() . '/assets/styles' => '@iamczech/easyadmin-fields/styles',
                 ],
             ],
         ]);

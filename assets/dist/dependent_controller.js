@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
  */
-var controller_dependent = class extends Controller {
+const controller_dependent = class extends Controller {
 
     connect() {
         let options = JSON.parse(this.element.getAttribute('data-dependent-field-options'));

@@ -3,9 +3,9 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Asset\AssetPackage;
-use Iamczech\EasyAdminFieldsBundle\Controller\TreeController;
+use Iamczech\EasyAdminFieldsBundle\Field\Configurator\CopyTextConfigurator;
+use Iamczech\EasyAdminFieldsBundle\Field\Configurator\LockedTextConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Form\EventListener\DependentAutocompleteSubscriber;
-use Iamczech\EasyAdminFieldsBundle\Routing\BundleRoutesLoader;
 use Iamczech\EasyAdminFieldsBundle\Service\EmbedConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Service\TreeConfigurator;
 
@@ -25,6 +25,14 @@ return static function (ContainerConfigurator $container)
         ->autoconfigure()
 
     ->set(TreeConfigurator::class)
+        ->autowire()
+        ->autoconfigure()
+
+    ->set(CopyTextConfigurator::class)
+        ->autowire()
+        ->autoconfigure()
+
+    ->set(LockedTextConfigurator::class)
         ->autowire()
         ->autoconfigure()
 

@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
  */
-var controller_locked = class extends Controller {
+const controller_locked = class extends Controller {
 
     static TEMPLATE = `
         <div class="modal fade" id="field-confirm-modal" tabindex="-1" aria-hidden="true">

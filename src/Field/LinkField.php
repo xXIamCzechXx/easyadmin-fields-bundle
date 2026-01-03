@@ -55,6 +55,7 @@ final class LinkField
 
         return $field
             ->addFormTheme('@EasyAdminFields/themes/link.html.twig')
+            ->addCssFiles('@iamczech/easyadmin-fields/styles/link.css')
             ->setFormTypeOption('attr', [
                 self::URL => $adminUrlGeneratorDto,
                 EA::CRUD_CONTROLLER_FQCN => $adminUrlGeneratorDto->get(EA::CRUD_CONTROLLER_FQCN),

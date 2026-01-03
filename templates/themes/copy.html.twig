@@ -1,0 +1,19 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+
+{# @author Ing. Dominik Mach <xXIamCzechXx@gmail.com> #}
+{% block copy_text_widget %}
+    {% set attr = attr|merge({
+        'data-target': target|split('|')|map(name => form.parent.children[name].vars.id)|json_encode
+    }) %}
+
+    <div class="input-group"
+        {{ stimulus_controller('iamczech/easyadmin-fields-bundle/copy') }}
+    >
+        {{ block('form_widget') }}
+        <button type="button" class="btn" {{ stimulus_action('click->iamczech/easyadmin-fields-bundle/copy', 'updateValue') }}>
+            {{ attr['data-copy-text'] ?? 'Copy' }}
+        </button>
+    </div>
+{% endblock %}
