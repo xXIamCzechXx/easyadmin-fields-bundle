@@ -15,7 +15,7 @@ const controller_dependent = class extends Controller {
         this.dependenciesFormGroup = [];
 
         this.dependencies.forEach(dependency => {
-            let formGroup = getFieldFormGroup(dependency);
+            let formGroup = getFieldFormGroup(dependency, this.root);
             if (!formGroup) {
                 return;
             }
@@ -63,7 +63,7 @@ const controller_dependent = class extends Controller {
         let params = new URLSearchParams();
 
         this.dependencies.forEach(dependency => {
-            let formGroup = getFieldFormGroup(dependency);
+            let formGroup = getFieldFormGroup(dependency, this.root);
             if (!formGroup) {
                 return;
             }
@@ -160,8 +160,8 @@ export const isTomSelect = (element) => {
     return element && element.tomselect !== undefined;
 };
 
-export const getFieldFormGroup = (field) => {
-    let input = this.root.querySelector(`[name*="[${field}]"]`);
+export const getFieldFormGroup = (field, root) => {
+    let input = root.querySelector(`[name*="[${field}]"]`);
     if (!input) {
         return null;
     }
