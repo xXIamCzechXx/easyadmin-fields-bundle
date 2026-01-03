@@ -9,7 +9,7 @@ const controller_dependent = class extends Controller {
         let options = JSON.parse(this.element.getAttribute('data-dependent-field-options'));
         let type = this.element.getAttribute('data-dependent-field');
 
-        this.root = this.element.closest(('form'));
+        this.root = this.element.closest('.field-collection-item') ?? this.element.closest('form') ?? document;
         this.callbackUrl = options.callback_url;
         this.dependencies = options.dependencies;
         this.dependenciesFormGroup = [];
