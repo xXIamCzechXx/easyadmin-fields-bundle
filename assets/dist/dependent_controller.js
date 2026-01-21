@@ -170,11 +170,11 @@ export const getFieldFormGroup = (field, root) => {
 };
 
 export const getFormGroupField = (formGroup) => {
-    return formGroup.querySelector('select, input, textarea');
+    return formGroup.querySelector('select, input, textarea, button, a');
 };
 
 export const getFormGroupFields = (formGroup) => {
-    return formGroup.querySelectorAll('select, input, textarea');
+    return formGroup.querySelectorAll('select, input, textarea, button, a');
 };
 
 export const getInputClosestFormGroup = (input) => {
