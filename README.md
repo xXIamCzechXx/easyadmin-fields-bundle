@@ -12,7 +12,7 @@ It works great with WebpackEncore and this bundle has been created inspired by t
 
 ## 🚀 Requirements
 
-* **PHP** ≥ 8.4
+* **PHP** ≥ 8.2
 * **Symfony** ≥ 7.4
 * **EasyAdminBundle** ≥ 4.0
 * Compatible with **AssetMapper** (no Webpack Encore is not supported!)
