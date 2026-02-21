@@ -44,9 +44,6 @@
                         </li>
                     {% endif %}
 
-                    {% if loop.first %}
-                        {% dump(entity) %}
-                    {% endif %}
                     <li class="tree-item easyadmintree_tree-item"
                         data-action="dblclick->admin#redirect"
                         data-url="{{ ea_url().setAction('edit').setEntityId(entity.primaryKeyValue) }}"

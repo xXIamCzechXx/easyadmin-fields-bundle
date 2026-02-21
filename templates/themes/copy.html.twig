@@ -8,12 +8,12 @@
         'data-target': target|split('|')|map(name => form.parent.children[name].vars.id)|json_encode
     }) %}
 
-    <div class="input-group"
+    <div class="input-group iamczech--copy-group"
         {{ stimulus_controller('iamczech/easyadmin-fields-bundle/copy') }}
     >
         {{ block('form_widget') }}
-        <button type="button" class="btn" {{ stimulus_action('click->iamczech/easyadmin-fields-bundle/copy', 'updateValue') }}>
+        <a type="button" class="btn iamczech--copy-button" {{ stimulus_action('click->iamczech/easyadmin-fields-bundle/copy', 'updateValue') }}>
             {{ attr['data-copy-text'] ?? 'Copy' }}
-        </button>
+        </a>
     </div>
 {% endblock %}

@@ -38,7 +38,7 @@
             {{ include('@EasyAdmin/includes/_importmap.html.twig', { assets: ea.assets.assetMapperAssets ?? [] }, with_context = false) }}
         {% endblock %}
 
-        {% set passthrough_params = app.request.query.all|filter((v, k) => k in ['embed', 'municipalityId']) %} {# TODO::Modify me when adding new embed parameter #}
+        {% set passthrough_params = app.request.query.all|filter((v, k) => k in ['embed', 'entityInstanceId']) %}
         {% if passthrough_params|length > 0 %}
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
@@ -61,7 +61,9 @@
                     // Links (action buttons, pagination, menu items, atd.)
                     document.querySelectorAll('a[href]').forEach(a => {
                         const href = a.getAttribute('href');
-                        if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+                        if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
+                            return;
+                        }
                         a.href = addParams(href);
                     });
                     document.querySelectorAll('a[target="_blank"][href*="embed="]').forEach(a => {

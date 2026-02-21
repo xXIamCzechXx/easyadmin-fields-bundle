@@ -6,7 +6,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldConfiguratorInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
-use Iamczech\EasyAdminFieldsBundle\Field\CopyTextField;
 use Iamczech\EasyAdminFieldsBundle\Field\LockedTextField;
 use function Symfony\Component\Translation\t;
 use Symfony\Contracts\Translation\TranslatableInterface;

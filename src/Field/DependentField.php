@@ -13,6 +13,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class DependentField
 {
+    public const OPTION_CALLBACK_URL = 'callback_url';
+    public const OPTION_DEPENDENCIES = 'dependencies';
+    public const OPTION_FETCH_ON_INIT = 'fetch_on_init';
+
     public static function adapt(FieldInterface $field, array $options = []): FieldInterface
     {
         $resolver = new OptionsResolver();
@@ -77,14 +81,14 @@ final class DependentField
     public static function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'fetch_on_init' => false,
+            self::OPTION_FETCH_ON_INIT => false,
         ]);
 
-        $resolver->setRequired('callback_url');
-        $resolver->setRequired('dependencies');
+        $resolver->setRequired(self::OPTION_CALLBACK_URL);
+        $resolver->setRequired(self::OPTION_DEPENDENCIES);
 
-        $resolver->setAllowedTypes('callback_url', 'string');
-        $resolver->setAllowedTypes('dependencies', 'string[]');
-        $resolver->setAllowedTypes('fetch_on_init', 'boolean');
+        $resolver->setAllowedTypes(self::OPTION_CALLBACK_URL, 'string');
+        $resolver->setAllowedTypes(self::OPTION_DEPENDENCIES, 'string[]');
+        $resolver->setAllowedTypes(self::OPTION_FETCH_ON_INIT, 'boolean');
     }
 }

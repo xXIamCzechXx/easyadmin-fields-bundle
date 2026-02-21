@@ -181,14 +181,33 @@ export const getInputClosestFormGroup = (input) => {
     return input.closest('.js-form-group-override') || input.closest('.form-group');
 };
 
+const DURATION = 360;
+
 export const hideField = (field) => {
-    const formGroup = getInputClosestFormGroup(field);
-    formGroup.style.display = "none";
+    const el = getInputClosestFormGroup(field);
+
+    el.style.transition = `opacity ${DURATION}ms ease`;
+    el.style.opacity = "0";
+
+    window.setTimeout(() => {
+        el.style.display = "none";
+        if (el.parentElement) el.parentElement.style.display = "none";
+    }, DURATION);
 };
 
 export const showField = (field) => {
-    const formGroup = getInputClosestFormGroup(field);
-    formGroup.style.display = null;
+    const el = getInputClosestFormGroup(field);
+
+    if (el.parentElement) el.parentElement.style.display = "";
+    el.style.display = "";
+
+    // start from 0 then fade in
+    el.style.transition = `opacity ${DURATION}ms ease`;
+    el.style.opacity = "0";
+
+    requestAnimationFrame(() => {
+        el.style.opacity = "1";
+    });
 };
 
 export {
