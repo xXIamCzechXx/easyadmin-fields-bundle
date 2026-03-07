@@ -43,6 +43,10 @@ final readonly class EmbedConfigurator implements FieldConfiguratorInterface
             $callbackUrl->set($embeddedProperty, $entityDto->getInstance()->getId());
         }
 
+        foreach ($field->getCustomOption(EmbedField::OPTION_EMBEDDED_PARAMETERS) as $parameterName => $parameterValue) {
+            $callbackUrl->set($parameterName, $parameterValue);
+        }
+
         $field->setCustomOption(EmbedField::OPTION_EMBEDDED_CALLBACK_URL, $callbackUrl->generateUrl());
 
         $field->setFormTypeOptions([

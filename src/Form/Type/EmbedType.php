@@ -27,6 +27,7 @@ final class EmbedType extends AbstractType
                 EmbedField::OPTION_EMBEDDED_CONTROLLER => '',
                 EmbedField::OPTION_EMBEDDED_HEIGHT => '',
                 EmbedField::OPTION_EMBEDDED_PAGE_ADD_TEXT => '',
+                EmbedField::OPTION_EMBEDDED_PARAMETERS => [],
             ])
             ->setRequired([]);
     }

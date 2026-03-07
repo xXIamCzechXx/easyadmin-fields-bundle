@@ -143,9 +143,23 @@ The default page is Crud::PAGE_INDEX action, but you can change it via the setAc
 yield EmbedField::new('entities')
     ->setEmbeddedCrudController(SomeCrudController::class)
     ->setEmbeddedPropertyAlias('entityInstanceId'); // alias for property in embedded crud controller – current entity instance id is provided
+    ->setEmbeddedPageAddText('Embed form will be shown after the record is created') // embed is unavailable when creating, this shows a message on Crud::PAGE_ADD
+    ->setEmbeddedParameter('filters[id]', 1) // you can pass a single parameter to request header of an embedded crud controller
 ```
+NOTE: You don't need to setEmbeddedPageAddText(), a default message is shown, otherwise you can disable showing on Crud::PAGE_ADD by setting "hideWhenCreating()"
 
-NOTE: To render only content of EA you need to override default layout by overriding configureCrud method in your CrudController or AbstractCrudController if you have one.
+Assign multiple parameters to request header:
+```php
+yield EmbedField::new('entities')
+    ->setEmbeddedCrudController(SomeCrudController::class)
+    ->setEmbeddedPropertyAlias('entityInstanceId'); // alias for property in embedded crud controller – current entity instance id is provided
+    ->setEmbeddedPageAddText('Embed form will be shown after the record is created') // embed is unavailable when creating, this shows a message on Crud::PAGE_ADD
+    ->setEmbeddedParameters([
+        'filters[id]' => 1, // this automatically sets a filter of your choice if that filter is defined in an embedded crud controller
+        'custom-parameter' => 'some-value' // this automatically assigns "custom-paramter" to request header of the embedded crud controller
+    ])
+```
+NOTE: You can access custom parameters from the embedded crud controller via $this->request->query->get('your-parameter-name')
 
 ```php
 public function configureCrud(Crud $crud): Crud
@@ -157,6 +171,7 @@ public function configureCrud(Crud $crud): Crud
     return $crud;
 }
 ```
+NOTE: To render only content of EA you need to override default layout by overriding configureCrud method in your CrudController or AbstractCrudController if you have one.
 
 ### 🌳 **TreeConfigurator**
 You must use `NestedSetEntity` and implement `TreeInterface` directly into your entity where you want to show tree hierarchy.
@@ -229,7 +244,7 @@ yield LinkField::link(AssociationField::new('entity', 'Entity')
 ```
 NOTE: If you want link to follow your actual Crud Action, then don't manually do ->setAction(), it will automatically set Action to your current action.
 
-### 🔗 **QrField**
+### 🤳 **QrField**
 Provides automatic generation of QR code and print it on index, edit and detail pages. It is not mapped directly to any entity attribute, because it should consist of absolute URL. So field property is passed as a parameter to generate url when choosing generation of QR from route, not absolute URL
 
 **Usage:**
