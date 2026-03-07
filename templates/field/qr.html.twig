@@ -1,0 +1,32 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+
+{# @author Ing. Dominik Mach <xXIamCzechXx@gmail.com> #}
+{%- set attr = {class: (attr.class|default('h-auto') ~ '')|trim} -%}
+
+{% if field.customOption('iamczech_qr') %}
+    <a style="{{ field.label is empty ? 'margin-top: 30px;' : '' }}"
+        href="{{ field.customOption('iamczech_qr_url') }}"
+        target="{{ field.customOption('iamczech_qr_target') }}"
+        {%- block button_attributes -%}
+            {%- for attrname, attrvalue in attr -%}
+                {{- " " -}}
+                {%- if attrname in ['placeholder', 'title'] -%}
+                    {{- attrname }}="{{ translation_domain is same as(false) or attrvalue is null ? attrvalue : attrvalue|trans(attr_translation_parameters, translation_domain) }}"
+                {%- elseif attrvalue is same as(true) -%}
+                    {{- attrname }}="{{ attrname }}"
+                {%- elseif attrvalue is not same as(false) -%}
+                    {{- attrname }}="{{ attrvalue }}"
+                {%- endif -%}
+            {%- endfor -%}
+        {%- endblock button_attributes -%}
+    >
+        {%- block button_label  -%}
+            {% if field.customOption('icon') %}
+                <twig:ea:Icon name="{{ field.customOption('icon') }}" class="btn-icon" />
+            {% endif %}
+            <img src="data:image/png;base64,{{ field.customOption('iamczech_qr') }}" alt="qrcode">
+        {%- endblock button_label -%}
+    </a>
+{% else %}
+    Undefined QR instance!
+{% endif %}

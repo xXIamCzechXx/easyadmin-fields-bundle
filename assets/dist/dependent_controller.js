@@ -6,36 +6,38 @@ import { Controller } from "@hotwired/stimulus";
 const controller_dependent = class extends Controller {
 
     connect() {
-        let options = JSON.parse(this.element.getAttribute('data-dependent-field-options'));
-        let type = this.element.getAttribute('data-dependent-field');
+        this.hideOptions = JSON.parse(this.element.getAttribute('data-dependent-hide-options'));
+        this.adaptOptions = JSON.parse(this.element.getAttribute('data-dependent-adapt-options'));
 
         this.root = this.element.closest('.field-collection-item') ?? this.element.closest('form') ?? document;
-        this.callbackUrl = options.callback_url;
-        this.dependencies = options.dependencies;
         this.dependenciesFormGroup = [];
-
-        this.dependencies.forEach(dependency => {
-            let formGroup = getFieldFormGroup(dependency, this.root);
-            if (!formGroup) {
-                return;
-            }
-
-            if (type === 'hide') {
-                formGroup.addEventListener('input', this.handleHide.bind(this));
-            }
-            if (type === 'adapt') {
-                formGroup.addEventListener('input', this.handleAdapt.bind(this));
-            }
-            this.dependenciesFormGroup.push(formGroup);
-        });
 
         this.input = getFormGroupField(this.element);
 
-        if (options.fetch_on_init) {
-            if (type === 'hide') {
-                this.handleHide().catch(e => console.error(e));
-            }
-            if (type === 'adapt') {
+        if (this.hideOptions != null) {
+            this.hideOptions.dependencies.forEach(dependency => {
+                let formGroup = getFieldFormGroup(dependency, this.root);
+                if (formGroup) {
+                    formGroup.addEventListener('input', this.handleHide.bind(this));
+                    this.dependenciesFormGroup.push(formGroup);
+                }
+
+                if (this.hideOptions.fetch_on_init) {
+                    this.handleHide().catch(e => console.error(e));
+                }
+            });
+        }
+
+        if (this.adaptOptions != null) {
+            this.adaptOptions.dependencies.forEach(dependency => {
+                let formGroup = getFieldFormGroup(dependency, this.root);
+                if (formGroup) {
+                    formGroup.addEventListener('input', this.handleAdapt.bind(this));
+                    this.dependenciesFormGroup.push(formGroup);
+                }
+            });
+
+            if (this.adaptOptions.fetch_on_init) {
                 this.handleAdapt().catch(e => console.error(e));
             }
         }
@@ -44,13 +46,13 @@ const controller_dependent = class extends Controller {
     async handleAdapt() {
         let hasEmptyOption = Array.from(this.input.options).some(option => option.value === "");
         let oldValue = this.input.value;
-        let newOptions = await this.fetchOptions();
+        let newOptions = await this.fetchOptions(this.adaptOptions);
 
         this.clearOptions().setOptions(newOptions, hasEmptyOption, oldValue);
     }
 
     async handleHide() {
-        let show = await this.fetchOptions();
+        let show = await this.fetchOptions(this.hideOptions);
 
         if (show === true) {
             showField(this.input);
@@ -59,10 +61,10 @@ const controller_dependent = class extends Controller {
         }
     }
 
-    async fetchOptions() {
+    async fetchOptions(options) {
         let params = new URLSearchParams();
 
-        this.dependencies.forEach(dependency => {
+        options.dependencies.forEach(dependency => {
             let formGroup = getFieldFormGroup(dependency, this.root);
             if (!formGroup) {
                 return;
@@ -81,7 +83,7 @@ const controller_dependent = class extends Controller {
         });
 
         let query = new URLSearchParams(params).toString();
-        let response = await fetch(`${this.callbackUrl}?${query}`);
+        let response = await fetch(`${options.callback_url}?${query}`);
 
         return await response.json();
     }
@@ -153,6 +155,11 @@ export const getValue = (input) => {
         return input.checked ? "true" : "false";
     }
 
+    if (input.getAttribute('type') === 'radio') {
+        const checked = input.closest('.field-select').querySelector(`input[type="radio"][name="${CSS.escape(input.name)}"]:checked`);
+        return checked ? checked.value : "";
+    }
+
     return input.value;
 };
 
@@ -198,7 +205,9 @@ export const hideField = (field) => {
 export const showField = (field) => {
     const el = getInputClosestFormGroup(field);
 
-    if (el.parentElement) el.parentElement.style.display = "";
+    if (el.parentElement) {
+        el.parentElement.style.display = "";
+    }
     el.style.display = "";
 
     // start from 0 then fade in

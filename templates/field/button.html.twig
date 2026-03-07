@@ -1,0 +1,44 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+
+{# @author Ing. Dominik Mach <xXIamCzechXx@gmail.com> #}
+{%- set attr = field.formTypeOption('button_attr')|default({})|merge({class: (attr.class|default('btn-secondary') ~ ' btn')|trim}) -%}
+{% if field.customOption('button_label') is not empty %}
+    {% set label = field.customOption('button_label') %}
+{% endif %}
+{% if field.customOption('href') %}
+    <a
+        style="{{ field.label is empty ? 'margin-top: 30px;' : '' }}"
+        href="{{ field.customOption('href') }}"
+        {%- block button_attributes -%}
+            {%- for attrname, attrvalue in attr -%}
+                {{- " " -}}
+                {%- if attrname in ['placeholder', 'title'] -%}
+                    {{- attrname }}="{{ translation_domain is same as(false) or attrvalue is null ? attrvalue : attrvalue|trans(attr_translation_parameters, translation_domain) }}"
+                {%- elseif attrvalue is same as(true) -%}
+                    {{- attrname }}="{{ attrname }}"
+                {%- elseif attrvalue is not same as(false) -%}
+                    {{- attrname }}="{{ attrvalue }}"
+                {%- endif -%}
+            {%- endfor -%}
+        {%- endblock button_attributes -%}
+    >
+        {%- block button_label  -%}
+            {% if field.customOption('icon') %}
+                <twig:ea:Icon name="{{ field.customOption('icon') }}" class="btn-icon" />
+            {% endif %}
+            <span class="btn-label">
+                <span class="action-label">{{ label is defined ? label : field.label }}</span>
+            </span>
+        {%- endblock button_label -%}
+    </a>
+{% else %}
+    <button type="button" {{ block('button_attributes') }}
+        {% if field.customOption('modal_template') %} data-action="click->admin#modal" data-target="#{{ field.propertyNameWithSuffix }}"{% endif %}
+    >
+        {{ block('button_label') }}
+    </button>
+{% endif %}
+
+{% if field.customOption('modal_template') %}
+    {% include field.customOption('modal_template') with field.customOption('modal_data') %}
+{% endif %}

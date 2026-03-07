@@ -36,14 +36,14 @@ final class DependentField
         }
 
         $field->setFormType(CrudDependentType::class);
+        $fieldDto = $field->getAsDto();
 
         return $field
             ->setFormTypeOptions([
-                'row_attr' => [
+                'row_attr' => array_merge($fieldDto->getFormTypeOption('row_attr') ?? [], [
                     'data-controller' => 'iamczech--easyadmin-fields-bundle--dependent',
-                    'data-dependent-field-options' => self::encodeOptions($options),
-                    'data-dependent-field' => 'adapt',
-                ],
+                    'data-dependent-adapt-options' => self::encodeOptions($options),
+                ])
             ]);
     }
 
@@ -58,14 +58,15 @@ final class DependentField
             return $field;
         }
 
+        $fieldDto = $field->getAsDto();
+
         return $field
             ->setFormTypeOptions([
-                'row_attr' => [
+                'row_attr' => array_merge($fieldDto->getFormTypeOption('row_attr') ?? [], [
                     'data-controller' => 'iamczech--easyadmin-fields-bundle--dependent',
-                    'data-dependent-field-options' => self::encodeOptions($options),
-                    'data-dependent-field' => 'hide',
+                    'data-dependent-hide-options' => self::encodeOptions($options),
                     'style' => 'display: none;',
-                ],
+                ]),
             ]);
     }
 
@@ -81,7 +82,7 @@ final class DependentField
     public static function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            self::OPTION_FETCH_ON_INIT => false,
+            self::OPTION_FETCH_ON_INIT => true,
         ]);
 
         $resolver->setRequired(self::OPTION_CALLBACK_URL);

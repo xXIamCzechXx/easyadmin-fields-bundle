@@ -13,7 +13,7 @@ class EmbedConfigurator
     public static function applyEmbedLayout(Crud $crud, RequestStack $requestStack): void
     {
         if ($requestStack->getCurrentRequest()?->query->getBoolean('embed')) {
-            $crud->overrideTemplate('layout', '@EasyAdminFields/layouts/embed.html.twig');
+            $crud->overrideTemplate('layout', '@EasyAdminFields/layout/embed.html.twig');
         }
     }
 }

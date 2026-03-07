@@ -1,0 +1,71 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+
+{# @author Ing. Dominik Mach <xXIamCzechXx@gmail.com> #}
+{% block dynamic_button_widget %}
+    {%- set attr = attr|merge(form.vars.ea_vars.field.formTypeOption('button_attr')|default({})) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('btn-secondary') ~ ' btn')|trim}) -%}
+
+    {% if form.vars.ea_vars.field.customOption('button_label') is not empty %}
+        {% set label = form.vars.ea_vars.field.customOption('button_label') %}
+    {% endif %}
+    {% if form.vars.ea_vars.field.customOption('href') %}
+        <a
+            style="{{ form.vars.ea_vars.field.label is empty ? 'margin-top: 22px;' : '' }}"
+            href="{{ form.vars.ea_vars.field.customOption('href') }}"
+            {{ block('button_attributes') }}
+        >
+
+            {% if form.vars.ea_vars.field.customOption('icon') %}
+                <twig:ea:Icon name="{{ form.vars.ea_vars.field.customOption('icon') }}" class="btn-icon" />
+            {% endif %}
+            <span class="btn-label">
+                <span class="action-label">{{ label is defined ? label : form.vars.ea_vars.field.label }}</span>
+            </span>
+
+        </a>
+    {% else %}
+        {% if form.vars.ea_vars.field.customOption('modal_template') %}
+            {%- set attr = attr|merge(
+                {'data-action': "click->admin#modal"},
+                {'data-target': "#" ~ form.vars.ea_vars.field.propertyNameWithSuffix }
+            ) -%}
+
+        {% endif %}
+
+        {%- if label is empty -%}
+            {%- if label_format is not empty -%}
+                {% set label = label_format|replace({
+                    '%name%': name,
+                    '%id%': id,
+                }) %}
+            {%- elseif label is not same as(false) -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {%- endif -%}
+        <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+            {% if form.vars.ea_vars.field.customOption('icon') %}
+                <twig:ea:Icon name="{{ form.vars.ea_vars.field.customOption('icon') }}"/>
+            {% endif %}
+            {%- if translation_domain is same as(false) -%}
+                {%- if label_html is defined and label_html is same as(false) -%}
+                    {{- label -}}
+                {%- else -%}
+                    {{- label|raw -}}
+                {%- endif -%}
+            {%- else -%}
+                {%- if label_html is defined and label_html is same as(false) -%}
+                    {{- label|trans(label_translation_parameters|default({}), translation_domain) -}}
+                {%- else -%}
+                    {{- label|trans(label_translation_parameters|default({}), translation_domain)|raw -}}
+                {%- endif -%}
+            {%- endif -%}
+        </button>
+
+        {% if form.vars.ea_vars.field.customOption('modal_template') %}
+            {% set field = form.vars.ea_vars.field %}
+            {% include form.vars.ea_vars.field.customOption('modal_template') with form.vars.ea_vars.field.customOption('modal_data') %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

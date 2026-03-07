@@ -6,6 +6,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
+use Iamczech\EasyAdminFieldsBundle\Form\Type\EmbedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -15,19 +16,22 @@ class EmbedField implements FieldInterface
 {
     use FieldTrait;
 
-    public const OPTION_CALLBACK_URL = 'callbackUrl';
-    public const OPTION_DEFAULT_HEIGHT = 'height';
-    public const OPTION_DEFAULT_CONTROLLER = 'controller';
+    public const OPTION_EMBEDDED_CALLBACK_URL = 'iamczech_embedded_callback_url';
+    public const OPTION_EMBEDDED_HEIGHT = 'iamczech_embedded_height';
+    public const OPTION_EMBEDDED_CONTROLLER = 'iamczech_embedded_controller';
+    public const OPTION_EMBEDDED_CRUD_CONTROLLER = 'iamczech_embedded_crud_controller';
+    public const OPTION_EMBEDDED_PROPERTY_ALIAS = 'iamczech_embedded_property_alias';
+    public const OPTION_EMBEDDED_ACTION = 'iamczech_embedded_action';
+    public const OPTION_EMBEDDED_PAGE_ADD_TEXT = 'iamczech_embedded_page_add_text';
 
     public static function new(string $propertyName, ?string $label = null): self
     {
         return (new self())
             ->setProperty($propertyName)
             ->setLabel($label)
-            ->setFormTypeOption('block_prefix', 'embed') // 'admin/widget/template.html.twig'
-            ->addFormTheme('@EasyAdminFields/themes/embed.html.twig')
-            ->setTemplatePath('@EasyAdminFields/fields/embed.html.twig')
-            ->setFormType(TextType::class)
+            ->addFormTheme('@EasyAdminFields/theme/embed.html.twig')
+            ->setTemplatePath('@EasyAdminFields/field/embed.html.twig')
+            ->setFormType(EmbedType::class)
             ->setFormTypeOptions([
                 'mapped' => false,
                 'required' => false,
@@ -36,24 +40,38 @@ class EmbedField implements FieldInterface
                 'label_attr.style' => 'display: none;', // Label must be hidden so it does not waste space on page
             ])
             ->hideOnIndex()
-            ->setCustomOption(self::OPTION_DEFAULT_HEIGHT, '400px')
-            ->setCustomOption(self::OPTION_CALLBACK_URL, null)
-            ->setCustomOption(self::OPTION_DEFAULT_CONTROLLER, 'iamczech--easyadmin-fields-bundle--embed')
+            ->setCustomOption(self::OPTION_EMBEDDED_CALLBACK_URL, null)
+            ->setCustomOption(self::OPTION_EMBEDDED_HEIGHT, '400px')
+            ->setCustomOption(self::OPTION_EMBEDDED_CONTROLLER, 'iamczech--easyadmin-fields-bundle--embed')
+            ->setCustomOption(self::OPTION_EMBEDDED_CRUD_CONTROLLER, null)
+            ->setCustomOption(self::OPTION_EMBEDDED_PROPERTY_ALIAS, null)
+            ->setCustomOption(self::OPTION_EMBEDDED_ACTION, Crud::PAGE_INDEX)
+            ->setCustomOption(self::OPTION_EMBEDDED_PAGE_ADD_TEXT, 'Data will be available when you create your record')
             ->addCssClass('embedded-form');
-    }
-
-    public function setCallbackUrl(AdminUrlGeneratorInterface $callbackUrl, $action = Crud::PAGE_INDEX): self
-    {
-        return $this->setCustomOption(self::OPTION_CALLBACK_URL, $callbackUrl->set('embed', 1)->setAction($action)->generateUrl());
     }
 
     public function setHeight(string $height): self
     {
-        return $this->setCustomOption(self::OPTION_DEFAULT_HEIGHT, $height);
+        return $this->setCustomOption(self::OPTION_EMBEDDED_HEIGHT, $height);
     }
 
-    public function setController(string $controller): self
+    public function setEmbeddedCrudController(string $controller): self
     {
-        return $this->setCustomOption(self::OPTION_DEFAULT_CONTROLLER, $controller);
+        return $this->setCustomOption(self::OPTION_EMBEDDED_CRUD_CONTROLLER, $controller);
+    }
+
+    public function setEmbeddedPropertyAlias(string $propertyAlias): self
+    {
+        return $this->setCustomOption(self::OPTION_EMBEDDED_PROPERTY_ALIAS, $propertyAlias);
+    }
+
+    public function setEmbeddedAction(string $action = Crud::PAGE_INDEX): self
+    {
+        return $this->setCustomOption(self::OPTION_EMBEDDED_ACTION, $action);
+    }
+
+    public function setEmbeddedPageAddText(string $text): self
+    {
+        return $this->setCustomOption(self::OPTION_EMBEDDED_PAGE_ADD_TEXT, $text);
     }
 }

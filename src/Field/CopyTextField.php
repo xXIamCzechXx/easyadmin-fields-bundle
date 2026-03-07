@@ -24,7 +24,7 @@ class CopyTextField implements FieldInterface
             ->setLabel($label)
             ->setTemplatePath('admin/field/name.html.twig')
             ->setFormType(CopyTextType::class)
-            ->addFormTheme('@EasyAdminFields/themes/copy.html.twig')
+            ->addFormTheme('@EasyAdminFields/theme/copy.html.twig')
             ->addCssClass('field-text')
             ->addCssFiles('@iamczech/easyadmin-fields/styles/copy.css')
             ->setDefaultColumns('col-md-6 col-xxl-5')

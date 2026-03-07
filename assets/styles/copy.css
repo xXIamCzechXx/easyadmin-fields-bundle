@@ -10,3 +10,8 @@
     border: 1px solid rgba(50, 50, 50, 0.3);
     padding: 3px 10px 5px;
 }
+
+.iamczech--copy-button:hover {
+    border: solid 1px rgba(50, 50, 50, 0.4) !important;
+    background: rgba(200, 200, 200, 0.1) !important;
+}

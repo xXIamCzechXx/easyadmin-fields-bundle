@@ -1,0 +1,25 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+
+{% extends '@EasyAdmin/crud/form_theme.html.twig' %}
+
+{# @author Ing. Dominik Mach <xXIamCzechXx@gmail.com> #}
+{% block qr_widget %}
+    <div class="qr-widget__input">
+        <div class="input-group iamczech--qr-preview-group">
+            {{ block('form_widget_simple') }}
+            <a href="{{ iamczech_qr_url }}" class="btn iamczech--qr-preview-button" title="detail" target="{{ iamczech_qr_target }}">
+                <span class="icon">
+                    <i class="fa-solid fa-eye"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    {% if iamczech_qr is not empty %}
+        <a href="{{ iamczech_qr_url }}" class="qr-section mt-2" title="detail" target="{{ iamczech_qr_target }}">
+            <img src="data:image/png;base64,{{ iamczech_qr }}" alt="qrcode">
+        </a>
+    {% endif %}
+{% endblock %}

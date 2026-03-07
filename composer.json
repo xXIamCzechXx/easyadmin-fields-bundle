@@ -1,6 +1,6 @@
 {
     "name": "iamczech/easyadmin-fields-bundle",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "Extends basic EasyAdmin fields and works well with AssetMapper and Smyfony 7.4^",
     "type": "symfony-bundle",
     "keywords": [
@@ -19,13 +19,15 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.4",
         "symfony/framework-bundle": "^7.2",
         "easycorp/easyadmin-bundle": "^4.0",
-        "symfony/stimulus-bundle": "^2.30"
+        "symfony/stimulus-bundle": "^2.30",
+        "endroid/qr-code-bundle": "^4.0"
     },
     "suggest": {
         "npm-asset/sortablejs": "Provides drag 'n drop functionality. Install via `symfony console importmap:require sortablejs`.",
-        "@symfony/stimulus-bridge": "Required for Stimulus controllers to work. Install via `symfony console importmap:require @symfony/stimulus-bridge`."
+        "@symfony/stimulus-bridge": "Required for Stimulus controllers to work. Install via `symfony console importmap:require @symfony/stimulus-bridge`.",
+        "endroid/qr-code-bundle": "Required for QrField to work. Install via `composer require endroid/qr-code-bundle`."
     }
 }

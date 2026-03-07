@@ -61,6 +61,7 @@ The bundle automatically registers its Stimulus controllers in your `controllers
             "enabled": true
         }
     }
+    ...
 }
 ```
 
@@ -84,11 +85,10 @@ yield AssociationField::new('client', 'Client')
     ->autocomplete();
 
 yield DependentField::adapt(
-    AssociationField::new('user', 'User'),
-    [
-        'callback_url' => $this->generateUrl('users_by_client'),
-        'dependencies' => ['client'],
-        'fetch_on_init' => false
+    AssociationField::new('user', 'User'), [
+         DependentField::OPTION_CALLBACK_URL => $this->generateUrl('users_by_client'),
+         DependentField::OPTION_DEPENDENCIES => ['client'],
+         DependentField::OPTION_FETCH_ON_INIT => true
     ]
 );
 ```
@@ -141,9 +141,8 @@ The default page is Crud::PAGE_INDEX action, but you can change it via the setAc
 
 ```php
 yield EmbedField::new('entities')
-    ->setCallbackUrl($this->adminUrlGenerator
-        ->unsetAll() // important for embedded forms to work, so they do not inherit the filters from the parent!
-        ->setController(EntityCrudController::class)
+    ->setEmbeddedCrudController(SomeCrudController::class)
+    ->setEmbeddedPropertyAlias('entityInstanceId'); // alias for property in embedded crud controller – current entity instance id is provided
 ```
 
 NOTE: To render only content of EA you need to override default layout by overriding configureCrud method in your CrudController or AbstractCrudController if you have one.
@@ -210,18 +209,17 @@ Only URLs the user is allowed to access (based on the configured CRUD action) ar
 **Usage:**
 
 ```php
-yield LinkField::link(AssociationField::new('person', 'Person'), [
+yield LinkField::link(AssociationField::new('entity', 'Entity'), [
         LinkField::URL => $this->adminUrlGenerator->setController(SomeCrudController::class)->setAction(Crud::PAGE_DETAIL/Crud::PAGE_EDIT),
         LinkField::TARGET => '_blank'/'_self',
         LinkField::PAGE_NAME => $pageName
     ]
 );
 ```
-
 NOTE: Works also with ->autocomplete() fields. But only works for "ToOne" relations!
 
 ```php
-yield LinkField::link(AssociationField::new('person', 'Person')
+yield LinkField::link(AssociationField::new('entity', 'Entity')
     ->autocomplete(), [
         LinkField::URL => $this->adminUrlGenerator->setController(SomeCrudController::class)->setAction(Crud::PAGE_DETAIL/Crud::PAGE_EDIT),
         LinkField::TARGET => '_blank'/'_self',
@@ -229,19 +227,20 @@ yield LinkField::link(AssociationField::new('person', 'Person')
     ]
 );
 ```
-
 NOTE: If you want link to follow your actual Crud Action, then don't manually do ->setAction(), it will automatically set Action to your current action.
 
+### 🔗 **QrField**
+Provides automatic generation of QR code and print it on index, edit and detail pages. It is not mapped directly to any entity attribute, because it should consist of absolute URL. So field property is passed as a parameter to generate url when choosing generation of QR from route, not absolute URL
+
+**Usage:**
+
 ```php
-public function configureCrud(Crud $crud): Crud
-{
-    $crud = parent::configureCrud($crud);
-
-    TreeConfigurator::applyTreeLayout($crud);
-
-    return $crud;
-}
+yield QrField::new('slug', 'QR Code')
+    ->setQrRoute('app_some_route')
+    ->setQrLabel(new Label('Some text provided to a QR'))
+    ->setQrSize(100);
 ```
+NOTE: setQrRoute() has priority over setQrUrl(), so when you set both, setQrRoute() will be used to generate QR code and also url into disabled input
 
 ## ⚙️ Stimulus Controllers
 
@@ -249,11 +248,11 @@ The bundle provides four native controllers:
 
 | Controller  | Description                                                |
 |-------------|------------------------------------------------------------|
+| `copy`      | Copy texts of another dependent filds to actual field      |
 | `dependent` | Handles asynchronous loading of dependent field options    |
-| `locked`    | Manages field unlocking with confirmation alerts           |
 | `embed`     | Resize iframe to its content height                        |
+| `locked`    | Manages field unlocking with confirmation alerts           |
 | `tree`      | Generates wonderful tree hierarchy with drag 'n drop       |
-| `link`      | Possibility to redirect to ToOne relation edit/detail page |
 
 If you're using AssetMapper, they’re automatically registered.
 Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
@@ -269,6 +268,8 @@ Otherwise, you can manually import them from `@iamczech/easyadmin-fields`.
 * **LockedTextField**: controlled unlocking of grouped inputs via confirmation
 * **LinkField**: possibility to redirect to ToOne relation edit/detail page
 * **TreeConfigurator**: controlled unlocking of grouped inputs via confirmation
+* **ButtonField**: makes possible to generate dynamic buttons that show modals, or redirect anywhere
+* **QrField**: based on input url generates QR code and print int on index, edit and detail pages
 
 ### 🧠 Upcoming Features
 
@@ -315,13 +316,13 @@ Copyright © [iamczech](https://github.com/iamczech)
 
 ## 🦯 Summary
 
-| Feature                   | Description                                       |
-| ------------------------- |---------------------------------------------------|
-| **Symfony Compatibility** | Symfony 7.4 and newer                             |
-| **PHP Version**           | PHP 8.4+                                          |
-| **Asset Pipeline**        | Fully compatible with AssetMapper                 |
-| **Provided Fields**       | `DependentField`, `LockedTextField`, `EmbedField` |
-| **Upcoming**              | `TreeField`, enhanced Autocomplete                |
+| Feature                   | Description                                                                 |
+| ------------------------- |-----------------------------------------------------------------------------|
+| **Symfony Compatibility** | Symfony 7.4 and newer                                                       |
+| **PHP Version**           | PHP 8.4+                                                                    |
+| **Asset Pipeline**        | Fully compatible with AssetMapper                                           |
+| **Provided Fields**       | `DependentField`, `LockedTextField`, `EmbedField`, `ButtonField`, `QrField` |
+| **Upcoming**              | `TreeField`, enhanced Autocomplete                                          |
 
 ---
 

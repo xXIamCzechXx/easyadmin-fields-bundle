@@ -26,7 +26,7 @@ class LockedTextField implements FieldInterface
             ->setLabel($label)
             ->setTemplatePath('admin/field/name.html.twig')
             ->setFormType(LockedTextType::class)
-            ->addFormTheme('@EasyAdminFields/themes/locked.html.twig')
+            ->addFormTheme('@EasyAdminFields/theme/locked.html.twig')
             ->addCssFiles('@iamczech/easyadmin-fields/styles/locked.css')
             ->addCssClass('field-text')
             ->setDefaultColumns('col-md-6 col-xxl-5')

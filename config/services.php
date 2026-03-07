@@ -4,9 +4,10 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Asset\AssetPackage;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\CopyTextConfigurator;
+use Iamczech\EasyAdminFieldsBundle\Field\Configurator\EmbedConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\LockedTextConfigurator;
+use Iamczech\EasyAdminFieldsBundle\Field\Configurator\QrConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Form\EventListener\DependentAutocompleteSubscriber;
-use Iamczech\EasyAdminFieldsBundle\Service\EmbedConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Service\TreeConfigurator;
 
 /**
@@ -20,7 +21,7 @@ return static function (ContainerConfigurator $container)
         ->arg(0, service('request_stack'))
         ->tag('assets.package', ['package' => AssetPackage::PACKAGE_NAME])
 
-    ->set(EmbedConfigurator::class)
+    ->set(\Iamczech\EasyAdminFieldsBundle\Service\EmbedConfigurator::class)
         ->autowire()
         ->autoconfigure()
 
@@ -33,6 +34,14 @@ return static function (ContainerConfigurator $container)
         ->autoconfigure()
 
     ->set(LockedTextConfigurator::class)
+        ->autowire()
+        ->autoconfigure()
+
+    ->set(QrConfigurator::class)
+        ->autowire()
+        ->autoconfigure()
+
+    ->set(EmbedConfigurator::class)
         ->autowire()
         ->autoconfigure()
 

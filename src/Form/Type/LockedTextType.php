@@ -10,21 +10,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
- * @deprecated use TextField instead
+ * @deprecated use TextField instead – everything is set by attr to an input, so this type is not needed anymore
  */
 final class LockedTextType extends AbstractType
 {
     public function getBlockPrefix(): string
     {
-        return 'locked_text'; // locked_text_widget
+        return 'locked_text';
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setRequired(['group'])
-            ->setAllowedTypes('group', ['string'])
-        ;
+            ->setAllowedTypes('group', ['string']);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void

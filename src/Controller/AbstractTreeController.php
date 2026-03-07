@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Iamczech\EasyAdminFieldsBundle\Controller;
 
 use App\Controller\Admin\AbstractCrudController;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +25,13 @@ abstract class AbstractTreeController extends AbstractCrudController
     {
         return parent::configureAssets($assets)
             ->addCssFile('@iamczech/easyadmin-fields/styles/tree.css');
+    }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
+            ->orderBy('entity.sequence', 'ASC')
+            ->addOrderBy('entity.left', 'ASC');
     }
 
     #[Route('/_easyadmin-fields-bundle/tree/reorder', name: 'iamczech_easyadminfields_tree_reorder', methods: ['POST'])]
