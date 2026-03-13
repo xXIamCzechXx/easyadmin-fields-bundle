@@ -25,7 +25,7 @@ final readonly class EmbedConfigurator implements FieldConfiguratorInterface
 
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
     {
-        if (($context->getCrud()->getCurrentPage() == Crud::PAGE_NEW)) {
+        if (in_array($context->getCrud()->getCurrentPage(), [Crud::PAGE_NEW, Crud::PAGE_INDEX])) {
             return;
         }
 
@@ -40,7 +40,7 @@ final readonly class EmbedConfigurator implements FieldConfiguratorInterface
             ->setAction($field->getCustomOption(EmbedField::OPTION_EMBEDDED_ACTION));
 
         if ('' !== $embeddedProperty = $field->getCustomOption(EmbedField::OPTION_EMBEDDED_PROPERTY_ALIAS)) {
-            $callbackUrl->set($embeddedProperty, $entityDto->getInstance()->getId());
+            $callbackUrl->set($embeddedProperty, $entityDto->getInstance()?->getId());
         }
 
         foreach ($field->getCustomOption(EmbedField::OPTION_EMBEDDED_PARAMETERS) as $parameterName => $parameterValue) {

@@ -19,6 +19,7 @@ const controller_dependent = class extends Controller {
                 let formGroup = getFieldFormGroup(dependency, this.root);
                 if (formGroup) {
                     formGroup.addEventListener('input', this.handleHide.bind(this));
+                    formGroup.addEventListener('change', this.handleHide.bind(this));
                     this.dependenciesFormGroup.push(formGroup);
                 }
 
@@ -73,12 +74,14 @@ const controller_dependent = class extends Controller {
             let field = getFormGroupField(formGroup);
             let value = getValue(field);
 
-            if (Array.isArray(value)) {
-                value.forEach(singleValue => {
-                    params.append(dependency + "[]", singleValue);
-                });
-            } else {
-                params.append(dependency, value);
+            if (value) { // cannot send parameter with an empty value
+                if (Array.isArray(value)) {
+                    value.forEach(singleValue => {
+                        params.append(dependency + "[]", singleValue);
+                    });
+                } else {
+                    params.append(dependency, value);
+                }
             }
         });
 
@@ -157,7 +160,7 @@ export const getValue = (input) => {
 
     if (input.getAttribute('type') === 'radio') {
         const checked = input.closest('.field-select').querySelector(`input[type="radio"][name="${CSS.escape(input.name)}"]:checked`);
-        return checked ? checked.value : "";
+        return checked ? checked.value : "0";
     }
 
     return input.value;
@@ -168,10 +171,27 @@ export const isTomSelect = (element) => {
 };
 
 export const getFieldFormGroup = (field, root) => {
-    let input = root.querySelector(`[name*="[${field}]"]`);
-    if (!input) {
+    // support for embedded crud controllers
+    const isCollectionScope = root?.classList?.contains('field-collection-item') || !!root?.closest?.('.field-collection-item');
+
+    const findCandidates = (scope) =>
+        Array.from(scope.querySelectorAll(`[name$="[${field}]"], [name*="[${field}]"]`));
+
+    let candidates = findCandidates(root);
+
+    if (isCollectionScope) {
+        const item = root.classList.contains('field-collection-item') ? root : root.closest('.field-collection-item');
+        candidates = candidates.filter((el) => el.closest('.field-collection-item') === item);
+    } else {
+        candidates = candidates.filter((el) => !el.closest('.field-collection-item'));
+    }
+
+    if (!candidates.length) {
         return null;
     }
+
+    const exact = candidates.find((el) => el.name?.endsWith(`[${field}]`));
+    const input = exact ?? candidates[0];
 
     return getInputClosestFormGroup(input);
 };

@@ -3,6 +3,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Asset\AssetPackage;
+use Iamczech\EasyAdminFieldsBundle\Field\Configurator\CollectionExtendFieldConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\CopyTextConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\EmbedConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\LockedTextConfigurator;
@@ -42,6 +43,10 @@ return static function (ContainerConfigurator $container)
         ->autoconfigure()
 
     ->set(EmbedConfigurator::class)
+        ->autowire()
+        ->autoconfigure()
+
+    ->set(CollectionExtendFieldConfigurator::class)
         ->autowire()
         ->autoconfigure()
 

@@ -38,7 +38,8 @@
             {{ include('@EasyAdmin/includes/_importmap.html.twig', { assets: ea.assets.assetMapperAssets ?? [] }, with_context = false) }}
         {% endblock %}
 
-        {% set passthrough_params = app.request.query.all|filter((v, k) => k in ['embed', 'entityInstanceId']) %}
+        {# {% set passthrough_params = app.request.query.all|filter((v, k) => k in ['embed', 'entityInstanceId']) %} #}
+        {% set passthrough_params = app.request.query.all %}
         {% if passthrough_params|length > 0 %}
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
