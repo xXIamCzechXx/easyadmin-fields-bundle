@@ -18,7 +18,7 @@ class ButtonField implements FieldInterface
 
     public static function new(string $propertyName, ?string $label = null): self
     {
-        return new self()
+        return (new self())
             ->setProperty($propertyName)
             ->setLabel($label)
             ->setFormType(DynamicButtonType::class)
