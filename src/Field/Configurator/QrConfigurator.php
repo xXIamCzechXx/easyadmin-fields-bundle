@@ -62,7 +62,7 @@ final class QrConfigurator implements FieldConfiguratorInterface
 
     public static function generate(QrCode $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null): string
     {
-        $code = new PngWriter()->write(
+        $code = (new PngWriter())->write(
             $qrCode, $logo, $label
         );
 
