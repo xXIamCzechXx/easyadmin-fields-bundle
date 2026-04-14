@@ -86,7 +86,7 @@ final class DependentField
         ]);
 
         $resolver->setRequired(self::OPTION_CALLBACK_URL);
-        $resolver->setRequired(self::OPTION_DEPENDENCIES);
+        $resolver->setRequired(optionNames: self::OPTION_DEPENDENCIES);
 
         $resolver->setAllowedTypes(self::OPTION_CALLBACK_URL, 'string');
         $resolver->setAllowedTypes(self::OPTION_DEPENDENCIES, 'string[]');

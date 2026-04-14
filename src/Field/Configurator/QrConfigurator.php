@@ -40,8 +40,8 @@ final class QrConfigurator implements FieldConfiguratorInterface
         $property = $field->getCustomOption(QrField::OPTION_PROPERTY);
         $getter = sprintf('get%s', ucfirst($property));
 
-        if ('' !== $route = $field->getCustomOption(QrField::OPTION_ROUTE)) {
-            $url = $this->urlGenerator->generate($route, [$property => $entityDto->getInstance()?->$getter() ?? 'undefined'], UrlGeneratorInterface::ABSOLUTE_URL);
+        if (('' != $route = $field->getCustomOption(QrField::OPTION_ROUTE)) && !empty($entityDto->getInstance()?->$getter())) {
+            $url = $this->urlGenerator->generate($route, [$property => $entityDto->getInstance()?->$getter()], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $qr = self::generate(
@@ -62,7 +62,7 @@ final class QrConfigurator implements FieldConfiguratorInterface
 
     public static function generate(QrCode $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null): string
     {
-        $code = (new PngWriter())->write(
+        $code = new PngWriter()->write(
             $qrCode, $logo, $label
         );
 

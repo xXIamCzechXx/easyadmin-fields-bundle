@@ -6,6 +6,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Iamczech\EasyAdminFieldsBundle\Form\Type\DynamicButtonType;
+use Symfony\Contracts\Translation\TranslatableInterface;
 
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
@@ -16,9 +17,9 @@ class ButtonField implements FieldInterface
 
     private static array $buttonAttributes = [];
 
-    public static function new(string $propertyName, ?string $label = null): self
+    public static function new(string $propertyName, TranslatableInterface|string|bool|null $label = null): self
     {
-        return (new self())
+        return new self()
             ->setProperty($propertyName)
             ->setLabel($label)
             ->setFormType(DynamicButtonType::class)

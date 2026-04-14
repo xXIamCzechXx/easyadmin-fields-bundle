@@ -6,6 +6,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use Iamczech\EasyAdminFieldsBundle\Form\Type\LockedTextType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Contracts\Translation\TranslatableInterface;
 
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
@@ -19,7 +20,7 @@ class LockedTextField implements FieldInterface
     public const OPTION_CONFIRM_TEXT = 'attr.data-confirm';
     public const OPTION_CANCEL_TEXT = 'attr.data-cancel';
 
-    public static function new(string $propertyName, ?string $label = null): self
+    public static function new(string $propertyName, TranslatableInterface|string|bool|null $label = null): self
     {
         return (new self())
             ->setProperty($propertyName)

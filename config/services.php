@@ -3,12 +3,14 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Asset\AssetPackage;
+use Iamczech\EasyAdminFieldsBundle\Field\Configurator\AssociationConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\CollectionExtendFieldConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\CopyTextConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\EmbedConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\LockedTextConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Field\Configurator\QrConfigurator;
 use Iamczech\EasyAdminFieldsBundle\Form\EventListener\DependentAutocompleteSubscriber;
+use Iamczech\EasyAdminFieldsBundle\Form\Extension\EntityTypeExtension;
 use Iamczech\EasyAdminFieldsBundle\Service\TreeConfigurator;
 
 /**
@@ -50,7 +52,15 @@ return static function (ContainerConfigurator $container)
         ->autowire()
         ->autoconfigure()
 
+    ->set(AssociationConfigurator::class)
+        ->autowire()
+        ->autoconfigure()
+
     ->set(DependentAutocompleteSubscriber::class)
+        ->autowire()
+        ->autoconfigure()
+
+    ->set(EntityTypeExtension::class)
         ->autowire()
         ->autoconfigure();
 };

@@ -10,6 +10,7 @@ use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\QrCodeInterface;
 use Iamczech\EasyAdminFieldsBundle\Form\Type\QrType;
+use Symfony\Contracts\Translation\TranslatableInterface;
 
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
@@ -28,7 +29,7 @@ class QrField implements FieldInterface
     public const OPTION_SIZE = 'iamczech_qr_size';
     public const OPTION_TARGET = 'iamczech_qr_target';
 
-    public static function new(string $propertyName, ?string $label = null): self
+    public static function new(string $propertyName, TranslatableInterface|string|bool|null $label = null): self
     {
         if (!interface_exists(QrCodeInterface::class)) {
             throw new \RuntimeException(sprintf('The bundle "%s" does not exist. Please install this bundle via: `composer require endroid/qr-code-bundle`.', QrCodeInterface::class));

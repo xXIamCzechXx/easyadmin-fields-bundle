@@ -17,7 +17,7 @@ class CopyTextField implements FieldInterface
     public const OPTION_TARGET_FIELD_NAME = 'targetFieldName';
     public const OPTION_COPY_BUTTON_LABEL = 'copyButtonLabel';
 
-    public static function new(string $propertyName, ?string $label = null): self
+    public static function new(string $propertyName, TranslatableInterface|string|bool|null $label = null): self
     {
         return (new self())
             ->setProperty($propertyName)

@@ -1,7 +1,7 @@
 {
     "name": "@iamczech/easyadmin-fields",
     "license": "MIT",
-    "version": "1.0.4",
+    "version": "1.0.9",
     "type": "module",
     "files": [
         "dist"
@@ -41,12 +41,6 @@
                 "fetch": "lazy",
                 "enabled": true
             },
-            "creatable": {
-                "main": "dist/creatable_controller.js",
-                "webpackMode": "lazy",
-                "fetch": "lazy",
-                "enabled": true
-            },
             "switchable": {
                 "main": "dist/switchable_controller.js",
                 "webpackMode": "lazy",
@@ -55,6 +49,18 @@
             },
             "configurable": {
                 "main": "dist/configurable_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            },
+            "association_list": {
+                "main": "dist/association_list_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            },
+            "association_create": {
+                "main": "dist/association_create_controller.js",
                 "webpackMode": "lazy",
                 "fetch": "lazy",
                 "enabled": true

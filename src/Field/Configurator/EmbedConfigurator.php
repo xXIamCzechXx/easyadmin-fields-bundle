@@ -40,7 +40,12 @@ final readonly class EmbedConfigurator implements FieldConfiguratorInterface
             ->setAction($field->getCustomOption(EmbedField::OPTION_EMBEDDED_ACTION));
 
         if ('' !== $embeddedProperty = $field->getCustomOption(EmbedField::OPTION_EMBEDDED_PROPERTY_ALIAS)) {
-            $callbackUrl->set($embeddedProperty, $entityDto->getInstance()?->getId());
+            if ('' !== $relatedEntityProperty = $field->getCustomOption(EmbedField::OPTION_EMBEDDED_RELATED_ENTITY)) {
+                $relatedEntityValue = $this->getPropertyValue($entityDto->getInstance(), $relatedEntityProperty);
+                $callbackUrl->set($embeddedProperty, $relatedEntityValue);
+            } else {
+                $callbackUrl->set($embeddedProperty, $entityDto->getPrimaryKeyValue());
+            }
         }
 
         foreach ($field->getCustomOption(EmbedField::OPTION_EMBEDDED_PARAMETERS) as $parameterName => $parameterValue) {
@@ -54,5 +59,20 @@ final readonly class EmbedConfigurator implements FieldConfiguratorInterface
             EmbedField::OPTION_EMBEDDED_CONTROLLER => $field->getCustomOption(EmbedField::OPTION_EMBEDDED_CONTROLLER),
             EmbedField::OPTION_EMBEDDED_HEIGHT => $field->getCustomOption(EmbedField::OPTION_EMBEDDED_HEIGHT),
         ]);
+    }
+
+    private function getPropertyValue(object $entityInstance, ?string $property): mixed
+    {
+        $getter = 'get'.ucfirst($property);
+
+        if (!method_exists($entityInstance, $getter)) {
+            throw new \RuntimeException(sprintf(
+                'Method \'%s::%s()\' does not exist.',
+                $entityInstance::class,
+                $getter,
+            ));
+        }
+
+        return $entityInstance->{$getter}()?->getId();
     }
 }

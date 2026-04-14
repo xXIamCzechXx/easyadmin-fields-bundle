@@ -4,10 +4,10 @@ namespace Iamczech\EasyAdminFieldsBundle\Field;
 
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\MenuItemDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Iamczech\EasyAdminFieldsBundle\Form\Type\EmbedType;
+use Symfony\Contracts\Translation\TranslatableInterface;
 
 /**
  * @author Ing. Dominik Mach <xXIamCzechXx@gmail.com>
@@ -21,11 +21,12 @@ class EmbedField implements FieldInterface
     public const OPTION_EMBEDDED_CONTROLLER = 'iamczech_embedded_controller';
     public const OPTION_EMBEDDED_CRUD_CONTROLLER = 'iamczech_embedded_crud_controller';
     public const OPTION_EMBEDDED_PROPERTY_ALIAS = 'iamczech_embedded_property_alias';
+    public const OPTION_EMBEDDED_RELATED_ENTITY = 'iamczech_embedded_related_entity';
     public const OPTION_EMBEDDED_ACTION = 'iamczech_embedded_action';
     public const OPTION_EMBEDDED_PAGE_ADD_TEXT = 'iamczech_embedded_page_add_text';
     public const OPTION_EMBEDDED_PARAMETERS = 'iamczech_embedded_parameters';
 
-    public static function new(string $propertyName, ?string $label = null): self
+    public static function new(string $propertyName, TranslatableInterface|string|bool|null $label = null): self
     {
         return (new self())
             ->setProperty($propertyName)
@@ -45,7 +46,8 @@ class EmbedField implements FieldInterface
             ->setCustomOption(self::OPTION_EMBEDDED_HEIGHT, '400px')
             ->setCustomOption(self::OPTION_EMBEDDED_CONTROLLER, 'iamczech--easyadmin-fields-bundle--embed')
             ->setCustomOption(self::OPTION_EMBEDDED_CRUD_CONTROLLER, null)
-            ->setCustomOption(self::OPTION_EMBEDDED_PROPERTY_ALIAS, null)
+            ->setCustomOption(self::OPTION_EMBEDDED_PROPERTY_ALIAS, '')
+            ->setCustomOption(self::OPTION_EMBEDDED_RELATED_ENTITY, '')
             ->setCustomOption(self::OPTION_EMBEDDED_ACTION, Crud::PAGE_INDEX)
             ->setCustomOption(self::OPTION_EMBEDDED_PAGE_ADD_TEXT, 'Data will be available when you create your record')
             ->setCustomOption(self::OPTION_EMBEDDED_PARAMETERS, [])
@@ -79,6 +81,11 @@ class EmbedField implements FieldInterface
     public function setEmbeddedPropertyAlias(string $propertyAlias): self
     {
         return $this->setCustomOption(self::OPTION_EMBEDDED_PROPERTY_ALIAS, $propertyAlias);
+    }
+
+    public function setEmbeddedRelatedEntity(string $relatedEntity): self
+    {
+        return $this->setCustomOption(self::OPTION_EMBEDDED_RELATED_ENTITY, $relatedEntity);
     }
 
     public function setEmbeddedAction(string $action = Crud::PAGE_INDEX): self

@@ -1,0 +1,71 @@
+{% block entity_widget %}
+    {% if list_selector|default(false) or allow_add|default(false) %}
+        <div
+            class="d-flex form-widget"
+            {% if list_selector|default(false) %}
+                {{ stimulus_controller('iamczech/easyadmin-fields-bundle/association_list',
+                    {
+                        url: form.vars.attr['data-ea-ajax-index-url'] ?? '',
+                        showFilter: list_show_filter,
+                        showSearch: list_show_search,
+                        cancelLabel: 'action.list.cancel'|trans([], domain = 'EasyAdminBundle'),
+                        validateLabel: 'action.list.validate'|trans([], domain = 'EasyAdminBundle'),
+                        columns: columns is defined ? columns : null,
+                        filters: filters is defined ? filters : null,
+                    })
+                }}
+                data-action="click->iamczech--easyadmin-fields-bundle--association-list#modalClick submit->iamczech--easyadmin-fields-bundle--association-list#modalSubmit"
+            {% endif %}
+            {% if allow_add|default(false) %}
+                {{ stimulus_controller('iamczech/easyadmin-fields-bundle/association_create') }}
+            {% endif %}
+        >
+            {% if allow_add|default(false) and list_selector|default(false) %}
+                <div class="widget flex-grow-1 pe-2">
+                    {{ form_widget(form, {
+                        attr: {
+                            'data-iamczech--easyadmin-fields-bundle--association-list-target': 'field',
+                            'data-controller': 'iamczech--easyadmin-fields-bundle--association-create',
+                        },
+                    }) }}
+                </div>
+            {% elseif allow_add|default(false) %}
+                {{ form_widget(form, {
+                    attr: {
+                        'data-controller': 'iamczech--easyadmin-fields-bundle--association-create',
+                    },
+                }) }}
+            {% else %}
+                <div class="widget flex-grow-1 pe-2">
+                    {{ form_widget(form, {
+                        attr: {
+                            'data-iamczech--easyadmin-fields-bundle--association-list-target': 'field',
+                        },
+                    }) }}
+                </div>
+            {% endif %}
+
+            {% if list_selector|default(false) %}
+                <div class="addons">
+                    <div class="btn-group" role="group">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-iamczech--easyadmin-fields-bundle--association-list-target="button"
+                            data-action="click->iamczech--easyadmin-fields-bundle--association-list#open"
+                        >
+                            <i class="fa {{ list_button_icon }} pe-1"></i>
+                            <span>{{ list_button_label|trans({}, 'EasyAdminBundle') }}</span>
+                        </button>
+                    </div>
+                </div>
+
+                {% include '@EasyAdminFields/crud/includes/_ajax_modal.html.twig' %}
+            {% endif %}
+        </div>
+
+    {% else %}
+        {{ form_widget(form) }}
+    {% endif %}
+
+{% endblock entity_widget %}
