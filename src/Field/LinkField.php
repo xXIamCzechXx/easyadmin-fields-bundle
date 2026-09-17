@@ -7,7 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -74,7 +74,7 @@ final class LinkField
          $resolver
              ->setRequired(self::URL)
              ->setRequired(self::PAGE_NAME)
-             ->setAllowedTypes(self::URL, AdminUrlGeneratorInterface::class)
+             ->setAllowedTypes(self::URL, AdminUrlGenerator::class)
              ->setAllowedTypes(self::PAGE_NAME, 'string');
     }
 }

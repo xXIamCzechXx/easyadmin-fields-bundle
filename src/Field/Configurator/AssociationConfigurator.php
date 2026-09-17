@@ -20,7 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Factory\FieldFactory;
 use Iamczech\EasyAdminFieldsBundle\Field\AssociationExtendedField;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\CrudAutocompleteType;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\CrudFormType;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -34,7 +34,7 @@ final class AssociationConfigurator implements FieldConfiguratorInterface
 {
     public function __construct(
         private EntityFactory $entityFactory,
-        private AdminUrlGeneratorInterface $adminUrlGenerator,
+        private AdminUrlGenerator $adminUrlGenerator,
         private RequestStack $requestStack,
         private ControllerFactory $controllerFactory,
         private FieldFactory $fieldFactory,

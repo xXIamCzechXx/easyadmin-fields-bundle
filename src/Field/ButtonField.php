@@ -4,7 +4,7 @@ namespace Iamczech\EasyAdminFieldsBundle\Field;
 
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Iamczech\EasyAdminFieldsBundle\Form\Type\DynamicButtonType;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
@@ -31,7 +31,7 @@ class ButtonField implements FieldInterface
             ->setDefaultColumns('col-md-6 col-xxl-5');
     }
 
-    public function setButtonUrl(AdminUrlGeneratorInterface $url): static
+    public function setButtonUrl(AdminUrlGenerator $url): static
     {
         $this->setCustomOption('href', $url->generateUrl());
 

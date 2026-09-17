@@ -5,7 +5,7 @@ namespace Iamczech\EasyAdminFieldsBundle\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Iamczech\EasyAdminFieldsBundle\Form\Type\EmbedType;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
@@ -59,7 +59,7 @@ class EmbedField implements FieldInterface
      * @see setEmbeddedCrudController()
      * @see setEmbeddedPropertyAlias()
      */
-    public function setCallbackUrl(AdminUrlGeneratorInterface $callbackUrl, $action = Crud::PAGE_INDEX): self
+    public function setCallbackUrl(AdminUrlGenerator $callbackUrl, $action = Crud::PAGE_INDEX): self
     {
         @trigger_deprecation('easycorp/easyadmin-bundle', '4.11', 'The "%s()" method is deprecated. Use the "%s()" method instead.', __METHOD__, 'markExpandedMenuItem()');
 
